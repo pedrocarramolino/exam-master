@@ -1,0 +1,10 @@
+.next
+node_modules
+coverage
+public
+package-lock.json
+
+# Proyecto Node independiente (su propio lint/format) y código generado
+functions
+src/dataconnect-generated
+dataconnect

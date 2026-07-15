@@ -1,0 +1,3 @@
+# Esquema de datos de ExamMaster — pendiente de diseño (Fase 1).
+# Placeholder para que `firebase deploy`/el emulador no fallen por schema vacío
+# hasta que definamos el modelo de oposición/comunidad/convocatoria/examen/pregunta.
