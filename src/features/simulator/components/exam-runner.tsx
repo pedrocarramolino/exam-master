@@ -93,6 +93,7 @@ export function ExamRunner({
               <button
                 key={option.id}
                 type="button"
+                aria-pressed={isSelected}
                 onClick={() => selectOption(question.id, option.id)}
                 className={`rounded-md border px-3 py-2 text-left text-sm transition-colors ${
                   isSelected ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'
@@ -108,11 +109,13 @@ export function ExamRunner({
         )}
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1.5" role="navigation" aria-label="Ir a pregunta">
         {exam.questions.map((q, index) => (
           <button
             key={q.id}
             type="button"
+            aria-label={`Pregunta ${index + 1}${answers[q.id] ? ' (respondida)' : ''}`}
+            aria-current={index === currentIndex ? 'true' : undefined}
             onClick={() => setCurrentIndex(index)}
             className={`size-8 rounded-md border text-xs font-medium ${
               index === currentIndex
