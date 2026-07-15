@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 
-export const metadata = { title: 'Iniciar sesión | ExamMaster' };
+export const metadata = { title: 'Iniciar sesión' };
 
 export default function LoginPage() {
   return (

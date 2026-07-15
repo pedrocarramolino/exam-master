@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 
-export const metadata = { title: 'Recuperar contraseña | ExamMaster' };
+export const metadata = { title: 'Recuperar contraseña' };
 
 export default function ForgotPasswordPage() {
   return (

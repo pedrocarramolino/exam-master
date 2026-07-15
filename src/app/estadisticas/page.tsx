@@ -16,7 +16,7 @@ import {
 const attemptRepository = new DataConnectAttemptRepository();
 const statisticsRepository = new DataConnectStatisticsRepository();
 
-export const metadata = { title: 'Mis estadísticas | ExamMaster' };
+export const metadata = { title: 'Mis estadísticas' };
 
 function formatMinutes(seconds: number): string {
   return `${Math.round(seconds / 60)} min`;

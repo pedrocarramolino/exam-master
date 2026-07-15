@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/infrastructure/firebase/session';
 
 const attemptRepository = new DataConnectAttemptRepository();
 
-export const metadata = { title: 'Revisión | ExamMaster' };
+export const metadata = { title: 'Revisión' };
 
 export default async function AttemptReviewPage({
   params,

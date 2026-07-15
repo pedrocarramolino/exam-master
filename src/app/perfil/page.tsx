@@ -15,7 +15,7 @@ import { getCurrentUser } from '@/infrastructure/firebase/session';
 
 const attemptRepository = new DataConnectAttemptRepository();
 
-export const metadata = { title: 'Mi perfil | ExamMaster' };
+export const metadata = { title: 'Mi perfil' };
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();

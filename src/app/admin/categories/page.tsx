@@ -15,7 +15,7 @@ import {
 
 const contentRepository = new DataConnectContentRepository();
 
-export const metadata = { title: 'Oposiciones | Admin ExamMaster' };
+export const metadata = { title: 'Oposiciones (admin)' };
 
 export default async function AdminCategoriesPage() {
   const categories = await contentRepository.listCategories();

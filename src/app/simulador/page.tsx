@@ -4,7 +4,7 @@ import { DataConnectContentRepository } from '@/infrastructure/firebase/content-
 
 const contentRepository = new DataConnectContentRepository();
 
-export const metadata = { title: 'Simulador | ExamMaster' };
+export const metadata = { title: 'Simulador' };
 
 export default async function SimulatorCategoriesPage() {
   const categories = await contentRepository.listCategories();

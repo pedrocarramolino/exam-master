@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 
-export const metadata = { title: 'Crear cuenta | ExamMaster' };
+export const metadata = { title: 'Crear cuenta' };
 
 export default function RegisterPage() {
   return (

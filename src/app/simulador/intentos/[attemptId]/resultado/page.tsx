@@ -14,7 +14,7 @@ import {
 
 const attemptRepository = new DataConnectAttemptRepository();
 
-export const metadata = { title: 'Resultado | ExamMaster' };
+export const metadata = { title: 'Resultado' };
 
 function formatDuration(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / 60);

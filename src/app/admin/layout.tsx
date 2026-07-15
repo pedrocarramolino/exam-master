@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/infrastructure/firebase/session';
 
 const userRoleRepository = new DataConnectUserRoleRepository();
 
-export const metadata = { title: 'Panel de administración | ExamMaster' };
+export const metadata = { title: 'Panel de administración' };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
