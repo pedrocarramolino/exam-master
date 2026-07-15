@@ -285,6 +285,16 @@ export interface Exam_Key {
   __typename?: 'Exam_Key';
 }
 
+export interface FinishExamAttemptData {
+  examAttempt_update?: ExamAttempt_Key | null;
+}
+
+export interface FinishExamAttemptVariables {
+  attemptId: UUIDString;
+  score: number;
+  timeSpentSeconds: number;
+}
+
 export interface GetAttemptByIdData {
   examAttempts: ({
     id: UUIDString;
@@ -360,6 +370,17 @@ export interface GetExamForAttemptData {
 }
 
 export interface GetExamForAttemptVariables {
+  examId: UUIDString;
+}
+
+export interface GetInProgressAttemptData {
+  examAttempts: ({
+    id: UUIDString;
+    startedAt: TimestampString;
+  } & ExamAttempt_Key)[];
+}
+
+export interface GetInProgressAttemptVariables {
   examId: UUIDString;
 }
 
@@ -459,6 +480,25 @@ export interface ReplaceAnswerOptionsVariables {
   option4IsCorrect: boolean;
 }
 
+export interface SaveAttemptAnswerData {
+  attemptAnswer_upsert: AttemptAnswer_Key;
+}
+
+export interface SaveAttemptAnswerVariables {
+  attemptId: UUIDString;
+  questionId: UUIDString;
+  selectedOptionId?: UUIDString | null;
+  isCorrect?: boolean | null;
+}
+
+export interface StartExamAttemptData {
+  examAttempt_insert: ExamAttempt_Key;
+}
+
+export interface StartExamAttemptVariables {
+  examId: UUIDString;
+}
+
 export interface Topic_Key {
   id: UUIDString;
   __typename?: 'Topic_Key';
@@ -543,6 +583,42 @@ export const upsertUserRef: UpsertUserRef;
 
 export function upsertUser(vars: UpsertUserVariables): MutationPromise<UpsertUserData, UpsertUserVariables>;
 export function upsertUser(dc: DataConnect, vars: UpsertUserVariables): MutationPromise<UpsertUserData, UpsertUserVariables>;
+
+interface StartExamAttemptRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: StartExamAttemptVariables): MutationRef<StartExamAttemptData, StartExamAttemptVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: StartExamAttemptVariables): MutationRef<StartExamAttemptData, StartExamAttemptVariables>;
+  operationName: string;
+}
+export const startExamAttemptRef: StartExamAttemptRef;
+
+export function startExamAttempt(vars: StartExamAttemptVariables): MutationPromise<StartExamAttemptData, StartExamAttemptVariables>;
+export function startExamAttempt(dc: DataConnect, vars: StartExamAttemptVariables): MutationPromise<StartExamAttemptData, StartExamAttemptVariables>;
+
+interface SaveAttemptAnswerRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: SaveAttemptAnswerVariables): MutationRef<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: SaveAttemptAnswerVariables): MutationRef<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+  operationName: string;
+}
+export const saveAttemptAnswerRef: SaveAttemptAnswerRef;
+
+export function saveAttemptAnswer(vars: SaveAttemptAnswerVariables): MutationPromise<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+export function saveAttemptAnswer(dc: DataConnect, vars: SaveAttemptAnswerVariables): MutationPromise<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+
+interface FinishExamAttemptRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: FinishExamAttemptVariables): MutationRef<FinishExamAttemptData, FinishExamAttemptVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: FinishExamAttemptVariables): MutationRef<FinishExamAttemptData, FinishExamAttemptVariables>;
+  operationName: string;
+}
+export const finishExamAttemptRef: FinishExamAttemptRef;
+
+export function finishExamAttempt(vars: FinishExamAttemptVariables): MutationPromise<FinishExamAttemptData, FinishExamAttemptVariables>;
+export function finishExamAttempt(dc: DataConnect, vars: FinishExamAttemptVariables): MutationPromise<FinishExamAttemptData, FinishExamAttemptVariables>;
 
 interface CreateExamCategoryRef {
   /* Allow users to create refs without passing in DataConnect */
@@ -855,6 +931,18 @@ export const getMyAttemptsRef: GetMyAttemptsRef;
 
 export function getMyAttempts(options?: ExecuteQueryOptions): QueryPromise<GetMyAttemptsData, undefined>;
 export function getMyAttempts(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<GetMyAttemptsData, undefined>;
+
+interface GetInProgressAttemptRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetInProgressAttemptVariables): QueryRef<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetInProgressAttemptVariables): QueryRef<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+  operationName: string;
+}
+export const getInProgressAttemptRef: GetInProgressAttemptRef;
+
+export function getInProgressAttempt(vars: GetInProgressAttemptVariables, options?: ExecuteQueryOptions): QueryPromise<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+export function getInProgressAttempt(dc: DataConnect, vars: GetInProgressAttemptVariables, options?: ExecuteQueryOptions): QueryPromise<GetInProgressAttemptData, GetInProgressAttemptVariables>;
 
 interface GetAttemptByIdRef {
   /* Allow users to create refs without passing in DataConnect */

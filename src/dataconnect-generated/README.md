@@ -17,6 +17,7 @@ This README will guide you through the process of using the generated JavaScript
   - [*GetExamForAttempt*](#getexamforattempt)
   - [*GetAttemptReview*](#getattemptreview)
   - [*GetMyAttempts*](#getmyattempts)
+  - [*GetInProgressAttempt*](#getinprogressattempt)
   - [*GetAttemptById*](#getattemptbyid)
   - [*GetUserRole*](#getuserrole)
   - [*AdminListGroups*](#adminlistgroups)
@@ -27,6 +28,9 @@ This README will guide you through the process of using the generated JavaScript
   - [*AdminGetQuestion*](#admingetquestion)
 - [**Mutations**](#mutations)
   - [*UpsertUser*](#upsertuser)
+  - [*StartExamAttempt*](#startexamattempt)
+  - [*SaveAttemptAnswer*](#saveattemptanswer)
+  - [*FinishExamAttempt*](#finishexamattempt)
   - [*CreateExamCategory*](#createexamcategory)
   - [*UpdateExamCategory*](#updateexamcategory)
   - [*DeleteExamCategory*](#deleteexamcategory)
@@ -879,6 +883,118 @@ console.log(data.user);
 executeQuery(ref).then((response) => {
   const data = response.data;
   console.log(data.user);
+});
+```
+
+## GetInProgressAttempt
+You can execute the `GetInProgressAttempt` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getInProgressAttempt(vars: GetInProgressAttemptVariables, options?: ExecuteQueryOptions): QueryPromise<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+
+interface GetInProgressAttemptRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetInProgressAttemptVariables): QueryRef<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+}
+export const getInProgressAttemptRef: GetInProgressAttemptRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getInProgressAttempt(dc: DataConnect, vars: GetInProgressAttemptVariables, options?: ExecuteQueryOptions): QueryPromise<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+
+interface GetInProgressAttemptRef {
+  ...
+  (dc: DataConnect, vars: GetInProgressAttemptVariables): QueryRef<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+}
+export const getInProgressAttemptRef: GetInProgressAttemptRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getInProgressAttemptRef:
+```typescript
+const name = getInProgressAttemptRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetInProgressAttempt` query requires an argument of type `GetInProgressAttemptVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface GetInProgressAttemptVariables {
+  examId: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `GetInProgressAttempt` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetInProgressAttemptData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetInProgressAttemptData {
+  examAttempts: ({
+    id: UUIDString;
+    startedAt: TimestampString;
+  } & ExamAttempt_Key)[];
+}
+```
+### Using `GetInProgressAttempt`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getInProgressAttempt, GetInProgressAttemptVariables } from '@dataconnect/generated';
+
+// The `GetInProgressAttempt` query requires an argument of type `GetInProgressAttemptVariables`:
+const getInProgressAttemptVars: GetInProgressAttemptVariables = {
+  examId: ..., 
+};
+
+// Call the `getInProgressAttempt()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getInProgressAttempt(getInProgressAttemptVars);
+// Variables can be defined inline as well.
+const { data } = await getInProgressAttempt({ examId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getInProgressAttempt(dataConnect, getInProgressAttemptVars);
+
+console.log(data.examAttempts);
+
+// Or, you can use the `Promise` API.
+getInProgressAttempt(getInProgressAttemptVars).then((response) => {
+  const data = response.data;
+  console.log(data.examAttempts);
+});
+```
+
+### Using `GetInProgressAttempt`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getInProgressAttemptRef, GetInProgressAttemptVariables } from '@dataconnect/generated';
+
+// The `GetInProgressAttempt` query requires an argument of type `GetInProgressAttemptVariables`:
+const getInProgressAttemptVars: GetInProgressAttemptVariables = {
+  examId: ..., 
+};
+
+// Call the `getInProgressAttemptRef()` function to get a reference to the query.
+const ref = getInProgressAttemptRef(getInProgressAttemptVars);
+// Variables can be defined inline as well.
+const ref = getInProgressAttemptRef({ examId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getInProgressAttemptRef(dataConnect, getInProgressAttemptVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.examAttempts);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.examAttempts);
 });
 ```
 
@@ -1950,6 +2066,348 @@ console.log(data.user_upsert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.user_upsert);
+});
+```
+
+## StartExamAttempt
+You can execute the `StartExamAttempt` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+startExamAttempt(vars: StartExamAttemptVariables): MutationPromise<StartExamAttemptData, StartExamAttemptVariables>;
+
+interface StartExamAttemptRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: StartExamAttemptVariables): MutationRef<StartExamAttemptData, StartExamAttemptVariables>;
+}
+export const startExamAttemptRef: StartExamAttemptRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+startExamAttempt(dc: DataConnect, vars: StartExamAttemptVariables): MutationPromise<StartExamAttemptData, StartExamAttemptVariables>;
+
+interface StartExamAttemptRef {
+  ...
+  (dc: DataConnect, vars: StartExamAttemptVariables): MutationRef<StartExamAttemptData, StartExamAttemptVariables>;
+}
+export const startExamAttemptRef: StartExamAttemptRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the startExamAttemptRef:
+```typescript
+const name = startExamAttemptRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `StartExamAttempt` mutation requires an argument of type `StartExamAttemptVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface StartExamAttemptVariables {
+  examId: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `StartExamAttempt` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `StartExamAttemptData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface StartExamAttemptData {
+  examAttempt_insert: ExamAttempt_Key;
+}
+```
+### Using `StartExamAttempt`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, startExamAttempt, StartExamAttemptVariables } from '@dataconnect/generated';
+
+// The `StartExamAttempt` mutation requires an argument of type `StartExamAttemptVariables`:
+const startExamAttemptVars: StartExamAttemptVariables = {
+  examId: ..., 
+};
+
+// Call the `startExamAttempt()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await startExamAttempt(startExamAttemptVars);
+// Variables can be defined inline as well.
+const { data } = await startExamAttempt({ examId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await startExamAttempt(dataConnect, startExamAttemptVars);
+
+console.log(data.examAttempt_insert);
+
+// Or, you can use the `Promise` API.
+startExamAttempt(startExamAttemptVars).then((response) => {
+  const data = response.data;
+  console.log(data.examAttempt_insert);
+});
+```
+
+### Using `StartExamAttempt`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, startExamAttemptRef, StartExamAttemptVariables } from '@dataconnect/generated';
+
+// The `StartExamAttempt` mutation requires an argument of type `StartExamAttemptVariables`:
+const startExamAttemptVars: StartExamAttemptVariables = {
+  examId: ..., 
+};
+
+// Call the `startExamAttemptRef()` function to get a reference to the mutation.
+const ref = startExamAttemptRef(startExamAttemptVars);
+// Variables can be defined inline as well.
+const ref = startExamAttemptRef({ examId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = startExamAttemptRef(dataConnect, startExamAttemptVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.examAttempt_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.examAttempt_insert);
+});
+```
+
+## SaveAttemptAnswer
+You can execute the `SaveAttemptAnswer` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+saveAttemptAnswer(vars: SaveAttemptAnswerVariables): MutationPromise<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+
+interface SaveAttemptAnswerRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: SaveAttemptAnswerVariables): MutationRef<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+}
+export const saveAttemptAnswerRef: SaveAttemptAnswerRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+saveAttemptAnswer(dc: DataConnect, vars: SaveAttemptAnswerVariables): MutationPromise<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+
+interface SaveAttemptAnswerRef {
+  ...
+  (dc: DataConnect, vars: SaveAttemptAnswerVariables): MutationRef<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+}
+export const saveAttemptAnswerRef: SaveAttemptAnswerRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the saveAttemptAnswerRef:
+```typescript
+const name = saveAttemptAnswerRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `SaveAttemptAnswer` mutation requires an argument of type `SaveAttemptAnswerVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface SaveAttemptAnswerVariables {
+  attemptId: UUIDString;
+  questionId: UUIDString;
+  selectedOptionId?: UUIDString | null;
+  isCorrect?: boolean | null;
+}
+```
+### Return Type
+Recall that executing the `SaveAttemptAnswer` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `SaveAttemptAnswerData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface SaveAttemptAnswerData {
+  attemptAnswer_upsert: AttemptAnswer_Key;
+}
+```
+### Using `SaveAttemptAnswer`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, saveAttemptAnswer, SaveAttemptAnswerVariables } from '@dataconnect/generated';
+
+// The `SaveAttemptAnswer` mutation requires an argument of type `SaveAttemptAnswerVariables`:
+const saveAttemptAnswerVars: SaveAttemptAnswerVariables = {
+  attemptId: ..., 
+  questionId: ..., 
+  selectedOptionId: ..., // optional
+  isCorrect: ..., // optional
+};
+
+// Call the `saveAttemptAnswer()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await saveAttemptAnswer(saveAttemptAnswerVars);
+// Variables can be defined inline as well.
+const { data } = await saveAttemptAnswer({ attemptId: ..., questionId: ..., selectedOptionId: ..., isCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await saveAttemptAnswer(dataConnect, saveAttemptAnswerVars);
+
+console.log(data.attemptAnswer_upsert);
+
+// Or, you can use the `Promise` API.
+saveAttemptAnswer(saveAttemptAnswerVars).then((response) => {
+  const data = response.data;
+  console.log(data.attemptAnswer_upsert);
+});
+```
+
+### Using `SaveAttemptAnswer`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, saveAttemptAnswerRef, SaveAttemptAnswerVariables } from '@dataconnect/generated';
+
+// The `SaveAttemptAnswer` mutation requires an argument of type `SaveAttemptAnswerVariables`:
+const saveAttemptAnswerVars: SaveAttemptAnswerVariables = {
+  attemptId: ..., 
+  questionId: ..., 
+  selectedOptionId: ..., // optional
+  isCorrect: ..., // optional
+};
+
+// Call the `saveAttemptAnswerRef()` function to get a reference to the mutation.
+const ref = saveAttemptAnswerRef(saveAttemptAnswerVars);
+// Variables can be defined inline as well.
+const ref = saveAttemptAnswerRef({ attemptId: ..., questionId: ..., selectedOptionId: ..., isCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = saveAttemptAnswerRef(dataConnect, saveAttemptAnswerVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.attemptAnswer_upsert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.attemptAnswer_upsert);
+});
+```
+
+## FinishExamAttempt
+You can execute the `FinishExamAttempt` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+finishExamAttempt(vars: FinishExamAttemptVariables): MutationPromise<FinishExamAttemptData, FinishExamAttemptVariables>;
+
+interface FinishExamAttemptRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: FinishExamAttemptVariables): MutationRef<FinishExamAttemptData, FinishExamAttemptVariables>;
+}
+export const finishExamAttemptRef: FinishExamAttemptRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+finishExamAttempt(dc: DataConnect, vars: FinishExamAttemptVariables): MutationPromise<FinishExamAttemptData, FinishExamAttemptVariables>;
+
+interface FinishExamAttemptRef {
+  ...
+  (dc: DataConnect, vars: FinishExamAttemptVariables): MutationRef<FinishExamAttemptData, FinishExamAttemptVariables>;
+}
+export const finishExamAttemptRef: FinishExamAttemptRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the finishExamAttemptRef:
+```typescript
+const name = finishExamAttemptRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `FinishExamAttempt` mutation requires an argument of type `FinishExamAttemptVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface FinishExamAttemptVariables {
+  attemptId: UUIDString;
+  score: number;
+  timeSpentSeconds: number;
+}
+```
+### Return Type
+Recall that executing the `FinishExamAttempt` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `FinishExamAttemptData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface FinishExamAttemptData {
+  examAttempt_update?: ExamAttempt_Key | null;
+}
+```
+### Using `FinishExamAttempt`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, finishExamAttempt, FinishExamAttemptVariables } from '@dataconnect/generated';
+
+// The `FinishExamAttempt` mutation requires an argument of type `FinishExamAttemptVariables`:
+const finishExamAttemptVars: FinishExamAttemptVariables = {
+  attemptId: ..., 
+  score: ..., 
+  timeSpentSeconds: ..., 
+};
+
+// Call the `finishExamAttempt()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await finishExamAttempt(finishExamAttemptVars);
+// Variables can be defined inline as well.
+const { data } = await finishExamAttempt({ attemptId: ..., score: ..., timeSpentSeconds: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await finishExamAttempt(dataConnect, finishExamAttemptVars);
+
+console.log(data.examAttempt_update);
+
+// Or, you can use the `Promise` API.
+finishExamAttempt(finishExamAttemptVars).then((response) => {
+  const data = response.data;
+  console.log(data.examAttempt_update);
+});
+```
+
+### Using `FinishExamAttempt`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, finishExamAttemptRef, FinishExamAttemptVariables } from '@dataconnect/generated';
+
+// The `FinishExamAttempt` mutation requires an argument of type `FinishExamAttemptVariables`:
+const finishExamAttemptVars: FinishExamAttemptVariables = {
+  attemptId: ..., 
+  score: ..., 
+  timeSpentSeconds: ..., 
+};
+
+// Call the `finishExamAttemptRef()` function to get a reference to the mutation.
+const ref = finishExamAttemptRef(finishExamAttemptVars);
+// Variables can be defined inline as well.
+const ref = finishExamAttemptRef({ attemptId: ..., score: ..., timeSpentSeconds: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = finishExamAttemptRef(dataConnect, finishExamAttemptVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.examAttempt_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.examAttempt_update);
 });
 ```
 

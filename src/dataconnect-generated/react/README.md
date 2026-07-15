@@ -24,6 +24,7 @@ You can also follow the instructions from the [Data Connect documentation](https
   - [*GetExamForAttempt*](#getexamforattempt)
   - [*GetAttemptReview*](#getattemptreview)
   - [*GetMyAttempts*](#getmyattempts)
+  - [*GetInProgressAttempt*](#getinprogressattempt)
   - [*GetAttemptById*](#getattemptbyid)
   - [*GetUserRole*](#getuserrole)
   - [*AdminListGroups*](#adminlistgroups)
@@ -34,6 +35,9 @@ You can also follow the instructions from the [Data Connect documentation](https
   - [*AdminGetQuestion*](#admingetquestion)
 - [**Mutations**](#mutations)
   - [*UpsertUser*](#upsertuser)
+  - [*StartExamAttempt*](#startexamattempt)
+  - [*SaveAttemptAnswer*](#saveattemptanswer)
+  - [*FinishExamAttempt*](#finishexamattempt)
   - [*CreateExamCategory*](#createexamcategory)
   - [*UpdateExamCategory*](#updateexamcategory)
   - [*DeleteExamCategory*](#deleteexamcategory)
@@ -750,6 +754,91 @@ export default function GetMyAttemptsComponent() {
   // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
   if (query.isSuccess) {
     console.log(query.data.user);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## GetInProgressAttempt
+You can execute the `GetInProgressAttempt` Query using the following Query hook function, which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts):
+
+```javascript
+useGetInProgressAttempt(dc: DataConnect, vars: GetInProgressAttemptVariables, options?: useDataConnectQueryOptions<GetInProgressAttemptData>): UseDataConnectQueryResult<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useGetInProgressAttempt(vars: GetInProgressAttemptVariables, options?: useDataConnectQueryOptions<GetInProgressAttemptData>): UseDataConnectQueryResult<GetInProgressAttemptData, GetInProgressAttemptVariables>;
+```
+
+### Variables
+The `GetInProgressAttempt` Query requires an argument of type `GetInProgressAttemptVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface GetInProgressAttemptVariables {
+  examId: UUIDString;
+}
+```
+### Return Type
+Recall that calling the `GetInProgressAttempt` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `GetInProgressAttempt` Query is of type `GetInProgressAttemptData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface GetInProgressAttemptData {
+  examAttempts: ({
+    id: UUIDString;
+    startedAt: TimestampString;
+  } & ExamAttempt_Key)[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `GetInProgressAttempt`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, GetInProgressAttemptVariables } from '@dataconnect/generated';
+import { useGetInProgressAttempt } from '@dataconnect/generated/react'
+
+export default function GetInProgressAttemptComponent() {
+  // The `useGetInProgressAttempt` Query hook requires an argument of type `GetInProgressAttemptVariables`:
+  const getInProgressAttemptVars: GetInProgressAttemptVariables = {
+    examId: ..., 
+  };
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useGetInProgressAttempt(getInProgressAttemptVars);
+  // Variables can be defined inline as well.
+  const query = useGetInProgressAttempt({ examId: ..., });
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useGetInProgressAttempt(dataConnect, getInProgressAttemptVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetInProgressAttempt(getInProgressAttemptVars, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetInProgressAttempt(dataConnect, getInProgressAttemptVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.examAttempts);
   }
   return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
 }
@@ -1599,6 +1688,298 @@ export default function UpsertUserComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.user_upsert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## StartExamAttempt
+You can execute the `StartExamAttempt` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useStartExamAttempt(options?: useDataConnectMutationOptions<StartExamAttemptData, FirebaseError, StartExamAttemptVariables>): UseDataConnectMutationResult<StartExamAttemptData, StartExamAttemptVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useStartExamAttempt(dc: DataConnect, options?: useDataConnectMutationOptions<StartExamAttemptData, FirebaseError, StartExamAttemptVariables>): UseDataConnectMutationResult<StartExamAttemptData, StartExamAttemptVariables>;
+```
+
+### Variables
+The `StartExamAttempt` Mutation requires an argument of type `StartExamAttemptVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface StartExamAttemptVariables {
+  examId: UUIDString;
+}
+```
+### Return Type
+Recall that calling the `StartExamAttempt` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `StartExamAttempt` Mutation is of type `StartExamAttemptData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface StartExamAttemptData {
+  examAttempt_insert: ExamAttempt_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `StartExamAttempt`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, StartExamAttemptVariables } from '@dataconnect/generated';
+import { useStartExamAttempt } from '@dataconnect/generated/react'
+
+export default function StartExamAttemptComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useStartExamAttempt();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useStartExamAttempt(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useStartExamAttempt(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useStartExamAttempt(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useStartExamAttempt` Mutation requires an argument of type `StartExamAttemptVariables`:
+  const startExamAttemptVars: StartExamAttemptVariables = {
+    examId: ..., 
+  };
+  mutation.mutate(startExamAttemptVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ examId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(startExamAttemptVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.examAttempt_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## SaveAttemptAnswer
+You can execute the `SaveAttemptAnswer` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useSaveAttemptAnswer(options?: useDataConnectMutationOptions<SaveAttemptAnswerData, FirebaseError, SaveAttemptAnswerVariables>): UseDataConnectMutationResult<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useSaveAttemptAnswer(dc: DataConnect, options?: useDataConnectMutationOptions<SaveAttemptAnswerData, FirebaseError, SaveAttemptAnswerVariables>): UseDataConnectMutationResult<SaveAttemptAnswerData, SaveAttemptAnswerVariables>;
+```
+
+### Variables
+The `SaveAttemptAnswer` Mutation requires an argument of type `SaveAttemptAnswerVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface SaveAttemptAnswerVariables {
+  attemptId: UUIDString;
+  questionId: UUIDString;
+  selectedOptionId?: UUIDString | null;
+  isCorrect?: boolean | null;
+}
+```
+### Return Type
+Recall that calling the `SaveAttemptAnswer` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `SaveAttemptAnswer` Mutation is of type `SaveAttemptAnswerData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface SaveAttemptAnswerData {
+  attemptAnswer_upsert: AttemptAnswer_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `SaveAttemptAnswer`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, SaveAttemptAnswerVariables } from '@dataconnect/generated';
+import { useSaveAttemptAnswer } from '@dataconnect/generated/react'
+
+export default function SaveAttemptAnswerComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useSaveAttemptAnswer();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useSaveAttemptAnswer(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useSaveAttemptAnswer(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useSaveAttemptAnswer(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useSaveAttemptAnswer` Mutation requires an argument of type `SaveAttemptAnswerVariables`:
+  const saveAttemptAnswerVars: SaveAttemptAnswerVariables = {
+    attemptId: ..., 
+    questionId: ..., 
+    selectedOptionId: ..., // optional
+    isCorrect: ..., // optional
+  };
+  mutation.mutate(saveAttemptAnswerVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ attemptId: ..., questionId: ..., selectedOptionId: ..., isCorrect: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(saveAttemptAnswerVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.attemptAnswer_upsert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## FinishExamAttempt
+You can execute the `FinishExamAttempt` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useFinishExamAttempt(options?: useDataConnectMutationOptions<FinishExamAttemptData, FirebaseError, FinishExamAttemptVariables>): UseDataConnectMutationResult<FinishExamAttemptData, FinishExamAttemptVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useFinishExamAttempt(dc: DataConnect, options?: useDataConnectMutationOptions<FinishExamAttemptData, FirebaseError, FinishExamAttemptVariables>): UseDataConnectMutationResult<FinishExamAttemptData, FinishExamAttemptVariables>;
+```
+
+### Variables
+The `FinishExamAttempt` Mutation requires an argument of type `FinishExamAttemptVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface FinishExamAttemptVariables {
+  attemptId: UUIDString;
+  score: number;
+  timeSpentSeconds: number;
+}
+```
+### Return Type
+Recall that calling the `FinishExamAttempt` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `FinishExamAttempt` Mutation is of type `FinishExamAttemptData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface FinishExamAttemptData {
+  examAttempt_update?: ExamAttempt_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `FinishExamAttempt`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, FinishExamAttemptVariables } from '@dataconnect/generated';
+import { useFinishExamAttempt } from '@dataconnect/generated/react'
+
+export default function FinishExamAttemptComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useFinishExamAttempt();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useFinishExamAttempt(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useFinishExamAttempt(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useFinishExamAttempt(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useFinishExamAttempt` Mutation requires an argument of type `FinishExamAttemptVariables`:
+  const finishExamAttemptVars: FinishExamAttemptVariables = {
+    attemptId: ..., 
+    score: ..., 
+    timeSpentSeconds: ..., 
+  };
+  mutation.mutate(finishExamAttemptVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ attemptId: ..., score: ..., timeSpentSeconds: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(finishExamAttemptVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.examAttempt_update);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }

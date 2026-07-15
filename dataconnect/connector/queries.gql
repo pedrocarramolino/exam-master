@@ -110,6 +110,16 @@ query GetMyAttempts @auth(level: USER) {
   }
 }
 
+# ¿Ya hay un intento en curso de este examen? Para retomarlo en vez de duplicar.
+query GetInProgressAttempt($examId: UUID!) @auth(level: USER) {
+  examAttempts(
+    where: { examId: { eq: $examId }, userId: { eq_expr: "auth.uid" }, status: { eq: IN_PROGRESS } }
+  ) {
+    id
+    startedAt
+  }
+}
+
 # Filtra por id + userId_expr: "auth.uid" (en vez de leer por id a secas) para que
 # un usuario no pueda leer el intento de otro adivinando/incrementando el UUID.
 query GetAttemptById($attemptId: UUID!) @auth(level: USER) {

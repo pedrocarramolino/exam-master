@@ -1,11 +1,50 @@
 # Mutations de ExamMaster.
-#
-# La lógica del simulador de examen se añade en la Fase 4, junto a esa feature.
 
 # Sincroniza el perfil del usuario autenticado la primera vez que inicia sesión
 # (y en updates de perfil). "auth.uid" impide que un usuario cree/edite el perfil de otro.
 mutation UpsertUser($email: String!, $displayName: String) @auth(level: USER) {
   user_upsert(data: { id_expr: "auth.uid", email: $email, displayName: $displayName })
+}
+
+# --- Simulador de examen ---
+
+# Segura incluso llamada con impersonación: "auth.uid" ata el intento al usuario
+# impersonado, no se puede crear un intento a nombre de otro.
+mutation StartExamAttempt($examId: UUID!) @auth(level: USER) {
+  examAttempt_insert(data: { userId_expr: "auth.uid", examId: $examId })
+}
+
+# NO_ACCESS: Data Connect no puede expresar "solo si el attempt es tuyo" en un
+# update por id: la propiedad se verifica en el Server Action antes de llamar a esto
+# (leyendo el intento con GetAttemptById/GetInProgressAttempt, que sí están protegidas).
+mutation SaveAttemptAnswer(
+  $attemptId: UUID!
+  $questionId: UUID!
+  $selectedOptionId: UUID
+  $isCorrect: Boolean
+) @auth(level: NO_ACCESS) {
+  attemptAnswer_upsert(
+    data: {
+      attemptId: $attemptId
+      questionId: $questionId
+      selectedOptionId: $selectedOptionId
+      isCorrect: $isCorrect
+      answeredAt_expr: "request.time"
+    }
+  )
+}
+
+mutation FinishExamAttempt($attemptId: UUID!, $score: Float!, $timeSpentSeconds: Int!)
+@auth(level: NO_ACCESS) {
+  examAttempt_update(
+    id: $attemptId
+    data: {
+      status: FINISHED
+      finishedAt_expr: "request.time"
+      score: $score
+      timeSpentSeconds: $timeSpentSeconds
+    }
+  )
 }
 
 # --- Panel de administración ---

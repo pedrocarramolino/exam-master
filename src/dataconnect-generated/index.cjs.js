@@ -47,6 +47,48 @@ exports.upsertUser = function upsertUser(dcOrVars, vars) {
 }
 ;
 
+const startExamAttemptRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'StartExamAttempt', inputVars);
+}
+startExamAttemptRef.operationName = 'StartExamAttempt';
+exports.startExamAttemptRef = startExamAttemptRef;
+
+exports.startExamAttempt = function startExamAttempt(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(startExamAttemptRef(dcInstance, inputVars));
+}
+;
+
+const saveAttemptAnswerRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'SaveAttemptAnswer', inputVars);
+}
+saveAttemptAnswerRef.operationName = 'SaveAttemptAnswer';
+exports.saveAttemptAnswerRef = saveAttemptAnswerRef;
+
+exports.saveAttemptAnswer = function saveAttemptAnswer(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(saveAttemptAnswerRef(dcInstance, inputVars));
+}
+;
+
+const finishExamAttemptRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'FinishExamAttempt', inputVars);
+}
+finishExamAttemptRef.operationName = 'FinishExamAttempt';
+exports.finishExamAttemptRef = finishExamAttemptRef;
+
+exports.finishExamAttempt = function finishExamAttempt(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(finishExamAttemptRef(dcInstance, inputVars));
+}
+;
+
 const createExamCategoryRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -415,6 +457,21 @@ exports.getMyAttempts = function getMyAttempts(dcOrOptions, options) {
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
   return executeQuery(getMyAttemptsRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const getInProgressAttemptRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetInProgressAttempt', inputVars);
+}
+getInProgressAttemptRef.operationName = 'GetInProgressAttempt';
+exports.getInProgressAttemptRef = getInProgressAttemptRef;
+
+exports.getInProgressAttempt = function getInProgressAttempt(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(getInProgressAttemptRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;
 

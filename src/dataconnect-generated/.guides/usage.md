@@ -12,10 +12,16 @@ For each operation, there is a wrapper hook that can be used to call the operati
 
 Here are all of the hooks that get generated:
 ```ts
-import { useUpsertUser, useCreateExamCategory, useUpdateExamCategory, useDeleteExamCategory, useCreateExamGroup, useUpdateExamGroup, useDeleteExamGroup, useCreateExamEdition, useUpdateExamEdition, useDeleteExamEdition } from '@dataconnect/generated/react';
+import { useUpsertUser, useStartExamAttempt, useSaveAttemptAnswer, useFinishExamAttempt, useCreateExamCategory, useUpdateExamCategory, useDeleteExamCategory, useCreateExamGroup, useUpdateExamGroup, useDeleteExamGroup } from '@dataconnect/generated/react';
 // The types of these hooks are available in react/index.d.ts
 
 const { data, isPending, isSuccess, isError, error } = useUpsertUser(upsertUserVars);
+
+const { data, isPending, isSuccess, isError, error } = useStartExamAttempt(startExamAttemptVars);
+
+const { data, isPending, isSuccess, isError, error } = useSaveAttemptAnswer(saveAttemptAnswerVars);
+
+const { data, isPending, isSuccess, isError, error } = useFinishExamAttempt(finishExamAttemptVars);
 
 const { data, isPending, isSuccess, isError, error } = useCreateExamCategory(createExamCategoryVars);
 
@@ -28,12 +34,6 @@ const { data, isPending, isSuccess, isError, error } = useCreateExamGroup(create
 const { data, isPending, isSuccess, isError, error } = useUpdateExamGroup(updateExamGroupVars);
 
 const { data, isPending, isSuccess, isError, error } = useDeleteExamGroup(deleteExamGroupVars);
-
-const { data, isPending, isSuccess, isError, error } = useCreateExamEdition(createExamEditionVars);
-
-const { data, isPending, isSuccess, isError, error } = useUpdateExamEdition(updateExamEditionVars);
-
-const { data, isPending, isSuccess, isError, error } = useDeleteExamEdition(deleteExamEditionVars);
 
 ```
 
@@ -72,11 +72,20 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { upsertUser, createExamCategory, updateExamCategory, deleteExamCategory, createExamGroup, updateExamGroup, deleteExamGroup, createExamEdition, updateExamEdition, deleteExamEdition } from '@dataconnect/generated';
+import { upsertUser, startExamAttempt, saveAttemptAnswer, finishExamAttempt, createExamCategory, updateExamCategory, deleteExamCategory, createExamGroup, updateExamGroup, deleteExamGroup } from '@dataconnect/generated';
 
 
 // Operation UpsertUser:  For variables, look at type UpsertUserVars in ../index.d.ts
 const { data } = await UpsertUser(dataConnect, upsertUserVars);
+
+// Operation StartExamAttempt:  For variables, look at type StartExamAttemptVars in ../index.d.ts
+const { data } = await StartExamAttempt(dataConnect, startExamAttemptVars);
+
+// Operation SaveAttemptAnswer:  For variables, look at type SaveAttemptAnswerVars in ../index.d.ts
+const { data } = await SaveAttemptAnswer(dataConnect, saveAttemptAnswerVars);
+
+// Operation FinishExamAttempt:  For variables, look at type FinishExamAttemptVars in ../index.d.ts
+const { data } = await FinishExamAttempt(dataConnect, finishExamAttemptVars);
 
 // Operation CreateExamCategory:  For variables, look at type CreateExamCategoryVars in ../index.d.ts
 const { data } = await CreateExamCategory(dataConnect, createExamCategoryVars);
@@ -95,15 +104,6 @@ const { data } = await UpdateExamGroup(dataConnect, updateExamGroupVars);
 
 // Operation DeleteExamGroup:  For variables, look at type DeleteExamGroupVars in ../index.d.ts
 const { data } = await DeleteExamGroup(dataConnect, deleteExamGroupVars);
-
-// Operation CreateExamEdition:  For variables, look at type CreateExamEditionVars in ../index.d.ts
-const { data } = await CreateExamEdition(dataConnect, createExamEditionVars);
-
-// Operation UpdateExamEdition:  For variables, look at type UpdateExamEditionVars in ../index.d.ts
-const { data } = await UpdateExamEdition(dataConnect, updateExamEditionVars);
-
-// Operation DeleteExamEdition:  For variables, look at type DeleteExamEditionVars in ../index.d.ts
-const { data } = await DeleteExamEdition(dataConnect, deleteExamEditionVars);
 
 
 ```

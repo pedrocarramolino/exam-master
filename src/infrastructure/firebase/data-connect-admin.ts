@@ -1,6 +1,10 @@
 import 'server-only';
 
-import { getDataConnect, type ConnectorConfig } from 'firebase-admin/data-connect';
+import {
+  getDataConnect,
+  type ConnectorConfig,
+  type OperationOptions,
+} from 'firebase-admin/data-connect';
 
 import { connectorConfig as clientConnectorConfig } from '@dataconnect/generated';
 import { firebaseAdminApp } from '@/infrastructure/firebase/admin';
@@ -19,3 +23,13 @@ const connectorConfig: ConnectorConfig = {
  * ya protegido por una comprobación de rol ADMIN.
  */
 export const dataConnectAdmin = getDataConnect(connectorConfig, firebaseAdminApp);
+
+/**
+ * Ejecuta una query/mutation como si la hiciera ese usuario: las políticas @auth
+ * basadas en "auth.uid" del esquema se evalúan de verdad (no se bypasean), a
+ * diferencia de una llamada sin impersonar. Usarlo para leer datos propios del
+ * usuario (intentos, revisión) preserva la protección a nivel de esquema.
+ */
+export function impersonateAs(userId: string): OperationOptions {
+  return { impersonate: { authClaims: { sub: userId } } };
+}
