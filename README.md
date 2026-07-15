@@ -74,5 +74,6 @@ Regla de dependencia: `app` y `features` pueden depender de `application` y `dom
 
 Este proyecto usa Next.js 16, que introduce cambios respecto a versiones anteriores relevantes para el desarrollo:
 
-- El archivo de middleware se llama `proxy.ts` (no `middleware.ts`) y exporta una función `proxy` (no `middleware`). Solo corre en runtime `nodejs`. Aún no existe en este proyecto: se añadirá en la Fase 2 al construir la protección de rutas autenticadas.
+- El archivo de middleware se llama `proxy.ts` (no `middleware.ts`) y exporta una función `proxy` (no `middleware`). Solo corre en runtime `nodejs`.
 - Las APIs de request (`cookies()`, `headers()`, `params`, `searchParams`) son siempre asíncronas.
+- `npm run build` usa `--webpack` en vez de Turbopack (el bundler por defecto en Next 16): con Turbopack, cualquier ruta que importe `firebase-admin` fallaba en producción (Vercel) con `ERR_REQUIRE_ESM` en una dependencia transitiva (`jwks-rsa` → `jose`). Con Webpack no ocurre. `npm run dev` sigue usando Turbopack sin problema.
