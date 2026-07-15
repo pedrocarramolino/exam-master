@@ -1,40 +1,26 @@
-import {
-  queryRef,
-  executeQuery,
-  validateArgsWithOptions,
-  mutationRef,
-  executeMutation,
-  validateArgs,
-  makeMemoryCacheProvider,
-} from 'firebase/data-connect';
+import { queryRef, executeQuery, validateArgsWithOptions, mutationRef, executeMutation, validateArgs, makeMemoryCacheProvider } from 'firebase/data-connect';
+
+export const AttemptStatus = {
+  IN_PROGRESS: "IN_PROGRESS",
+  FINISHED: "FINISHED",
+  ABANDONED: "ABANDONED",
+}
 
 export const connectorConfig = {
-  connector: 'example',
+  connector: 'exammaster',
   service: 'exammaster',
-  location: 'europe-west2',
+  location: 'europe-west2'
 };
 export const dataConnectSettings = {
   cacheSettings: {
-    cacheProvider: makeMemoryCacheProvider(),
-  },
+    cacheProvider: makeMemoryCacheProvider()
+  }
 };
-export const createMovieRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
-  dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'CreateMovie', inputVars);
-};
-createMovieRef.operationName = 'CreateMovie';
-
-export function createMovie(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
-  return executeMutation(createMovieRef(dcInstance, inputVars));
-}
-
 export const upsertUserRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
   return mutationRef(dcInstance, 'UpsertUser', inputVars);
-};
+}
 upsertUserRef.operationName = 'UpsertUser';
 
 export function upsertUser(dcOrVars, vars) {
@@ -42,121 +28,107 @@ export function upsertUser(dcOrVars, vars) {
   return executeMutation(upsertUserRef(dcInstance, inputVars));
 }
 
-export const addReviewRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+export const listExamCategoriesRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'AddReview', inputVars);
-};
-addReviewRef.operationName = 'AddReview';
+  return queryRef(dcInstance, 'ListExamCategories');
+}
+listExamCategoriesRef.operationName = 'ListExamCategories';
 
-export function addReview(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
-  return executeMutation(addReviewRef(dcInstance, inputVars));
+export function listExamCategories(dcOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
+  return executeQuery(listExamCategoriesRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 
-export const deleteReviewRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+export const listExamGroupsByCategoryRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'DeleteReview', inputVars);
-};
-deleteReviewRef.operationName = 'DeleteReview';
+  return queryRef(dcInstance, 'ListExamGroupsByCategory', inputVars);
+}
+listExamGroupsByCategoryRef.operationName = 'ListExamGroupsByCategory';
 
-export function deleteReview(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
-  return executeMutation(deleteReviewRef(dcInstance, inputVars));
+export function listExamGroupsByCategory(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(listExamGroupsByCategoryRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 
-export const listMoviesRef = (dc) => {
-  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined);
+export const listExamEditionsByGroupRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListMovies');
-};
-listMoviesRef.operationName = 'ListMovies';
+  return queryRef(dcInstance, 'ListExamEditionsByGroup', inputVars);
+}
+listExamEditionsByGroupRef.operationName = 'ListExamEditionsByGroup';
 
-export function listMovies(dcOrOptions, options) {
-  const {
-    dc: dcInstance,
-    vars: inputVars,
-    options: inputOpts,
-  } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined, false, false);
-  return executeQuery(
-    listMoviesRef(dcInstance, inputVars),
-    inputOpts && { fetchPolicy: inputOpts.fetchPolicy },
-  );
+export function listExamEditionsByGroup(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(listExamEditionsByGroupRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 
-export const listUsersRef = (dc) => {
-  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined);
+export const listExamsByEditionRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListUsers');
-};
-listUsersRef.operationName = 'ListUsers';
+  return queryRef(dcInstance, 'ListExamsByEdition', inputVars);
+}
+listExamsByEditionRef.operationName = 'ListExamsByEdition';
 
-export function listUsers(dcOrOptions, options) {
-  const {
-    dc: dcInstance,
-    vars: inputVars,
-    options: inputOpts,
-  } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined, false, false);
-  return executeQuery(
-    listUsersRef(dcInstance, inputVars),
-    inputOpts && { fetchPolicy: inputOpts.fetchPolicy },
-  );
+export function listExamsByEdition(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(listExamsByEditionRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 
-export const listUserReviewsRef = (dc) => {
-  const { dc: dcInstance } = validateArgs(connectorConfig, dc, undefined);
+export const getExamForAttemptRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListUserReviews');
-};
-listUserReviewsRef.operationName = 'ListUserReviews';
+  return queryRef(dcInstance, 'GetExamForAttempt', inputVars);
+}
+getExamForAttemptRef.operationName = 'GetExamForAttempt';
 
-export function listUserReviews(dcOrOptions, options) {
-  const {
-    dc: dcInstance,
-    vars: inputVars,
-    options: inputOpts,
-  } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined, false, false);
-  return executeQuery(
-    listUserReviewsRef(dcInstance, inputVars),
-    inputOpts && { fetchPolicy: inputOpts.fetchPolicy },
-  );
+export function getExamForAttempt(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(getExamForAttemptRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 
-export const getMovieByIdRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+export const getAttemptReviewRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetMovieById', inputVars);
-};
-getMovieByIdRef.operationName = 'GetMovieById';
+  return queryRef(dcInstance, 'GetAttemptReview', inputVars);
+}
+getAttemptReviewRef.operationName = 'GetAttemptReview';
 
-export function getMovieById(dcOrVars, varsOrOptions, options) {
-  const {
-    dc: dcInstance,
-    vars: inputVars,
-    options: inputOpts,
-  } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
-  return executeQuery(
-    getMovieByIdRef(dcInstance, inputVars),
-    inputOpts && { fetchPolicy: inputOpts.fetchPolicy },
-  );
+export function getAttemptReview(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(getAttemptReviewRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 
-export const searchMovieRef = (dcOrVars, vars) => {
-  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars);
+export const getMyAttemptsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'SearchMovie', inputVars);
-};
-searchMovieRef.operationName = 'SearchMovie';
-
-export function searchMovie(dcOrVars, varsOrOptions, options) {
-  const {
-    dc: dcInstance,
-    vars: inputVars,
-    options: inputOpts,
-  } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, false);
-  return executeQuery(
-    searchMovieRef(dcInstance, inputVars),
-    inputOpts && { fetchPolicy: inputOpts.fetchPolicy },
-  );
+  return queryRef(dcInstance, 'GetMyAttempts');
 }
+getMyAttemptsRef.operationName = 'GetMyAttempts';
+
+export function getMyAttempts(dcOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
+  return executeQuery(getMyAttemptsRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+
+export const getAttemptByIdRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetAttemptById', inputVars);
+}
+getAttemptByIdRef.operationName = 'GetAttemptById';
+
+export function getAttemptById(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(getAttemptByIdRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+

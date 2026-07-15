@@ -1,102 +1,33 @@
-import {
-  CreateMovieData,
-  CreateMovieVariables,
-  UpsertUserData,
-  UpsertUserVariables,
-  AddReviewData,
-  AddReviewVariables,
-  DeleteReviewData,
-  DeleteReviewVariables,
-  ListMoviesData,
-  ListUsersData,
-  ListUserReviewsData,
-  GetMovieByIdData,
-  GetMovieByIdVariables,
-  SearchMovieData,
-  SearchMovieVariables,
-} from '../';
-import {
-  UseDataConnectQueryResult,
-  useDataConnectQueryOptions,
-  UseDataConnectMutationResult,
-  useDataConnectMutationOptions,
-} from '@tanstack-query-firebase/react/data-connect';
-import { UseQueryResult, UseMutationResult } from '@tanstack/react-query';
+import { UpsertUserData, UpsertUserVariables, ListExamCategoriesData, ListExamGroupsByCategoryData, ListExamGroupsByCategoryVariables, ListExamEditionsByGroupData, ListExamEditionsByGroupVariables, ListExamsByEditionData, ListExamsByEditionVariables, GetExamForAttemptData, GetExamForAttemptVariables, GetAttemptReviewData, GetAttemptReviewVariables, GetMyAttemptsData, GetAttemptByIdData, GetAttemptByIdVariables } from '../';
+import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
+import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
 import { FirebaseError } from 'firebase/app';
 
-export function useCreateMovie(
-  options?: useDataConnectMutationOptions<CreateMovieData, FirebaseError, CreateMovieVariables>,
-): UseDataConnectMutationResult<CreateMovieData, CreateMovieVariables>;
-export function useCreateMovie(
-  dc: DataConnect,
-  options?: useDataConnectMutationOptions<CreateMovieData, FirebaseError, CreateMovieVariables>,
-): UseDataConnectMutationResult<CreateMovieData, CreateMovieVariables>;
 
-export function useUpsertUser(
-  options?: useDataConnectMutationOptions<UpsertUserData, FirebaseError, UpsertUserVariables>,
-): UseDataConnectMutationResult<UpsertUserData, UpsertUserVariables>;
-export function useUpsertUser(
-  dc: DataConnect,
-  options?: useDataConnectMutationOptions<UpsertUserData, FirebaseError, UpsertUserVariables>,
-): UseDataConnectMutationResult<UpsertUserData, UpsertUserVariables>;
+export function useUpsertUser(options?: useDataConnectMutationOptions<UpsertUserData, FirebaseError, UpsertUserVariables>): UseDataConnectMutationResult<UpsertUserData, UpsertUserVariables>;
+export function useUpsertUser(dc: DataConnect, options?: useDataConnectMutationOptions<UpsertUserData, FirebaseError, UpsertUserVariables>): UseDataConnectMutationResult<UpsertUserData, UpsertUserVariables>;
 
-export function useAddReview(
-  options?: useDataConnectMutationOptions<AddReviewData, FirebaseError, AddReviewVariables>,
-): UseDataConnectMutationResult<AddReviewData, AddReviewVariables>;
-export function useAddReview(
-  dc: DataConnect,
-  options?: useDataConnectMutationOptions<AddReviewData, FirebaseError, AddReviewVariables>,
-): UseDataConnectMutationResult<AddReviewData, AddReviewVariables>;
+export function useListExamCategories(options?: useDataConnectQueryOptions<ListExamCategoriesData>): UseDataConnectQueryResult<ListExamCategoriesData, undefined>;
+export function useListExamCategories(dc: DataConnect, options?: useDataConnectQueryOptions<ListExamCategoriesData>): UseDataConnectQueryResult<ListExamCategoriesData, undefined>;
 
-export function useDeleteReview(
-  options?: useDataConnectMutationOptions<DeleteReviewData, FirebaseError, DeleteReviewVariables>,
-): UseDataConnectMutationResult<DeleteReviewData, DeleteReviewVariables>;
-export function useDeleteReview(
-  dc: DataConnect,
-  options?: useDataConnectMutationOptions<DeleteReviewData, FirebaseError, DeleteReviewVariables>,
-): UseDataConnectMutationResult<DeleteReviewData, DeleteReviewVariables>;
+export function useListExamGroupsByCategory(vars: ListExamGroupsByCategoryVariables, options?: useDataConnectQueryOptions<ListExamGroupsByCategoryData>): UseDataConnectQueryResult<ListExamGroupsByCategoryData, ListExamGroupsByCategoryVariables>;
+export function useListExamGroupsByCategory(dc: DataConnect, vars: ListExamGroupsByCategoryVariables, options?: useDataConnectQueryOptions<ListExamGroupsByCategoryData>): UseDataConnectQueryResult<ListExamGroupsByCategoryData, ListExamGroupsByCategoryVariables>;
 
-export function useListMovies(
-  options?: useDataConnectQueryOptions<ListMoviesData>,
-): UseDataConnectQueryResult<ListMoviesData, undefined>;
-export function useListMovies(
-  dc: DataConnect,
-  options?: useDataConnectQueryOptions<ListMoviesData>,
-): UseDataConnectQueryResult<ListMoviesData, undefined>;
+export function useListExamEditionsByGroup(vars: ListExamEditionsByGroupVariables, options?: useDataConnectQueryOptions<ListExamEditionsByGroupData>): UseDataConnectQueryResult<ListExamEditionsByGroupData, ListExamEditionsByGroupVariables>;
+export function useListExamEditionsByGroup(dc: DataConnect, vars: ListExamEditionsByGroupVariables, options?: useDataConnectQueryOptions<ListExamEditionsByGroupData>): UseDataConnectQueryResult<ListExamEditionsByGroupData, ListExamEditionsByGroupVariables>;
 
-export function useListUsers(
-  options?: useDataConnectQueryOptions<ListUsersData>,
-): UseDataConnectQueryResult<ListUsersData, undefined>;
-export function useListUsers(
-  dc: DataConnect,
-  options?: useDataConnectQueryOptions<ListUsersData>,
-): UseDataConnectQueryResult<ListUsersData, undefined>;
+export function useListExamsByEdition(vars: ListExamsByEditionVariables, options?: useDataConnectQueryOptions<ListExamsByEditionData>): UseDataConnectQueryResult<ListExamsByEditionData, ListExamsByEditionVariables>;
+export function useListExamsByEdition(dc: DataConnect, vars: ListExamsByEditionVariables, options?: useDataConnectQueryOptions<ListExamsByEditionData>): UseDataConnectQueryResult<ListExamsByEditionData, ListExamsByEditionVariables>;
 
-export function useListUserReviews(
-  options?: useDataConnectQueryOptions<ListUserReviewsData>,
-): UseDataConnectQueryResult<ListUserReviewsData, undefined>;
-export function useListUserReviews(
-  dc: DataConnect,
-  options?: useDataConnectQueryOptions<ListUserReviewsData>,
-): UseDataConnectQueryResult<ListUserReviewsData, undefined>;
+export function useGetExamForAttempt(vars: GetExamForAttemptVariables, options?: useDataConnectQueryOptions<GetExamForAttemptData>): UseDataConnectQueryResult<GetExamForAttemptData, GetExamForAttemptVariables>;
+export function useGetExamForAttempt(dc: DataConnect, vars: GetExamForAttemptVariables, options?: useDataConnectQueryOptions<GetExamForAttemptData>): UseDataConnectQueryResult<GetExamForAttemptData, GetExamForAttemptVariables>;
 
-export function useGetMovieById(
-  vars: GetMovieByIdVariables,
-  options?: useDataConnectQueryOptions<GetMovieByIdData>,
-): UseDataConnectQueryResult<GetMovieByIdData, GetMovieByIdVariables>;
-export function useGetMovieById(
-  dc: DataConnect,
-  vars: GetMovieByIdVariables,
-  options?: useDataConnectQueryOptions<GetMovieByIdData>,
-): UseDataConnectQueryResult<GetMovieByIdData, GetMovieByIdVariables>;
+export function useGetAttemptReview(vars: GetAttemptReviewVariables, options?: useDataConnectQueryOptions<GetAttemptReviewData>): UseDataConnectQueryResult<GetAttemptReviewData, GetAttemptReviewVariables>;
+export function useGetAttemptReview(dc: DataConnect, vars: GetAttemptReviewVariables, options?: useDataConnectQueryOptions<GetAttemptReviewData>): UseDataConnectQueryResult<GetAttemptReviewData, GetAttemptReviewVariables>;
 
-export function useSearchMovie(
-  vars?: SearchMovieVariables,
-  options?: useDataConnectQueryOptions<SearchMovieData>,
-): UseDataConnectQueryResult<SearchMovieData, SearchMovieVariables>;
-export function useSearchMovie(
-  dc: DataConnect,
-  vars?: SearchMovieVariables,
-  options?: useDataConnectQueryOptions<SearchMovieData>,
-): UseDataConnectQueryResult<SearchMovieData, SearchMovieVariables>;
+export function useGetMyAttempts(options?: useDataConnectQueryOptions<GetMyAttemptsData>): UseDataConnectQueryResult<GetMyAttemptsData, undefined>;
+export function useGetMyAttempts(dc: DataConnect, options?: useDataConnectQueryOptions<GetMyAttemptsData>): UseDataConnectQueryResult<GetMyAttemptsData, undefined>;
+
+export function useGetAttemptById(vars: GetAttemptByIdVariables, options?: useDataConnectQueryOptions<GetAttemptByIdData>): UseDataConnectQueryResult<GetAttemptByIdData, GetAttemptByIdVariables>;
+export function useGetAttemptById(dc: DataConnect, vars: GetAttemptByIdVariables, options?: useDataConnectQueryOptions<GetAttemptByIdData>): UseDataConnectQueryResult<GetAttemptByIdData, GetAttemptByIdVariables>;

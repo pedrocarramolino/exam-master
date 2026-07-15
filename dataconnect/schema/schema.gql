@@ -1,3 +1,125 @@
-# Esquema de datos de ExamMaster — pendiente de diseño (Fase 1).
-# Placeholder para que `firebase deploy`/el emulador no fallen por schema vacío
-# hasta que definamos el modelo de oposición/comunidad/convocatoria/examen/pregunta.
+# Esquema de datos de ExamMaster (Fase 1).
+#
+# Jerarquía de contenido:
+#   ExamCategory -> ExamGroup -> ExamEdition -> Exam -> Question -> AnswerOption
+# (oposición -> comunidad -> convocatoria -> examen -> pregunta -> respuesta)
+#
+# Simulación:
+#   ExamAttempt -> AttemptAnswer
+#
+# Las estadísticas (nota media, % por tema, evolución...) no se guardan aquí:
+# se calculan mediante queries de agregación sobre ExamAttempt/AttemptAnswer.
+
+# --- Usuarios ---------------------------------------------------------------
+
+enum UserRole {
+  STUDENT
+  ADMIN
+}
+
+# Clave = UID de Firebase Auth. No se crea desde el cliente: se sincroniza
+# (upsert) la primera vez que el usuario inicia sesión.
+type User @table {
+  id: String! @default(expr: "auth.uid")
+  email: String! @col(dataType: "varchar(255)")
+  displayName: String @col(dataType: "varchar(120)")
+  role: UserRole! @default(value: "STUDENT")
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+# --- Jerarquía de contenido ---------------------------------------------------
+
+# Nivel 1: tipo de examen (oposición, carrera, certificación...).
+type ExamCategory @table {
+  name: String! @col(dataType: "varchar(150)")
+  slug: String! @col(dataType: "varchar(150)") @unique
+  description: String
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+# Nivel 2: agrupación dentro de una categoría (comunidad autónoma, universidad,
+# vendor de certificación, o "Nacional" para oposiciones de ámbito estatal).
+type ExamGroup @table {
+  category: ExamCategory!
+  name: String! @col(dataType: "varchar(150)")
+  slug: String! @col(dataType: "varchar(150)")
+}
+
+# Nivel 3: convocatoria (edición anual) dentro de un grupo.
+type ExamEdition @table {
+  group: ExamGroup!
+  year: Int!
+  label: String @col(dataType: "varchar(100)")
+  examDate: Date
+}
+
+# Nivel 4: examen concreto dentro de una convocatoria.
+type Exam @table {
+  edition: ExamEdition!
+  title: String! @col(dataType: "varchar(200)")
+  description: String
+  durationMinutes: Int!
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+# Tema, para etiquetar preguntas y calcular estadísticas por tema.
+# Vive a nivel de categoría porque un mismo tema ("Constitución Española")
+# se repite entre convocatorias y ediciones de una misma oposición.
+type Topic @table {
+  category: ExamCategory!
+  name: String! @col(dataType: "varchar(150)")
+}
+
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+type Question @table {
+  exam: Exam!
+  topic: Topic
+  statement: String!
+  explanation: String
+  difficulty: QuestionDifficulty! @default(value: "MEDIUM")
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type AnswerOption @table {
+  question: Question!
+  text: String!
+  isCorrect: Boolean! @default(value: false)
+  position: Int!
+}
+
+# --- Simulación de examen -----------------------------------------------------
+
+enum AttemptStatus {
+  IN_PROGRESS
+  FINISHED
+  ABANDONED
+}
+
+type ExamAttempt @table {
+  user: User!
+  exam: Exam!
+  status: AttemptStatus! @default(value: "IN_PROGRESS")
+  startedAt: Timestamp! @default(expr: "request.time")
+  finishedAt: Timestamp
+  # Denormalizado al finalizar, para no recalcular en cada lectura de resultados/estadísticas.
+  score: Float
+  timeSpentSeconds: Int
+}
+
+# Respuesta del usuario a una pregunta dentro de un intento.
+# Clave compuesta: como mucho una respuesta por pregunta y por intento
+# (guardar de nuevo sobrescribe = "guardar progreso automáticamente").
+type AttemptAnswer @table(key: ["attempt", "question"]) {
+  attempt: ExamAttempt!
+  question: Question!
+  selectedOption: AnswerOption
+  # Denormalizado desde selectedOption.isCorrect en el momento de responder,
+  # para que las queries de estadísticas no necesiten un join extra.
+  isCorrect: Boolean
+  answeredAt: Timestamp! @default(expr: "request.time")
+}

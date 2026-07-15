@@ -1,4 +1,4 @@
-connectorId: example
+connectorId: exammaster
 generate:
   javascriptSdk:
     - outputDir: ..\..\src\dataconnect-generated

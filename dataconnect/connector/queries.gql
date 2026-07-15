@@ -1,0 +1,140 @@
+# Queries de ExamMaster.
+
+# --- Catálogo público (elegir oposición / comunidad / convocatoria / examen) ---
+
+query ListExamCategories @auth(level: PUBLIC, insecureReason: "Catálogo público, sin datos sensibles.") {
+  examCategories(orderBy: { name: ASC }) {
+    id
+    name
+    slug
+    description
+  }
+}
+
+query ListExamGroupsByCategory($categoryId: UUID!)
+@auth(level: PUBLIC, insecureReason: "Catálogo público, sin datos sensibles.") {
+  examGroups(where: { categoryId: { eq: $categoryId } }, orderBy: { name: ASC }) {
+    id
+    name
+    slug
+  }
+}
+
+query ListExamEditionsByGroup($groupId: UUID!)
+@auth(level: PUBLIC, insecureReason: "Catálogo público, sin datos sensibles.") {
+  examEditions(where: { groupId: { eq: $groupId } }, orderBy: { year: DESC }) {
+    id
+    year
+    label
+    examDate
+  }
+}
+
+query ListExamsByEdition($editionId: UUID!)
+@auth(level: PUBLIC, insecureReason: "Catálogo público, sin datos sensibles.") {
+  exams(where: { editionId: { eq: $editionId } }, orderBy: { title: ASC }) {
+    id
+    title
+    description
+    durationMinutes
+  }
+}
+
+# --- Simulador: cargar un examen para responderlo, sin desvelar la respuesta correcta ---
+
+# No filtra por auth.uid porque el contenido del examen (enunciados, opciones) no es un
+# dato privado de usuario: es el mismo para cualquiera que lo empiece. Solo exige login.
+query GetExamForAttempt($examId: UUID!)
+@auth(level: USER, insecureReason: "El contenido del examen no es un dato privado del usuario; solo requiere estar autenticado.") {
+  exam(id: $examId) {
+    id
+    title
+    durationMinutes
+    questions: questions_on_exam {
+      id
+      statement
+      difficulty
+      options: answerOptions_on_question(orderBy: { position: ASC }) {
+        id
+        text
+        position
+      }
+    }
+  }
+}
+
+# --- Revisión: respuesta correcta y explicación, solo del propio intento y ya finalizado ---
+
+# Se filtra por el intento (userId = auth.uid) en vez de por examId a secas:
+# así no se puede pedir la respuesta correcta de un examen sin haberlo hecho,
+# ni ver las respuestas mientras el intento sigue en curso (status: FINISHED).
+query GetAttemptReview($attemptId: UUID!) @auth(level: USER) {
+  examAttempts(
+    where: { id: { eq: $attemptId }, userId: { eq_expr: "auth.uid" }, status: { eq: FINISHED } }
+  ) {
+    id
+    exam {
+      id
+      title
+      questions: questions_on_exam {
+        id
+        statement
+        explanation
+        optionsWithAnswer: answerOptions_on_question(orderBy: { position: ASC }) {
+          id
+          text
+          isCorrect
+          position
+        }
+      }
+    }
+  }
+}
+
+# --- Historial y resultado de intentos del usuario autenticado ---
+
+query GetMyAttempts @auth(level: USER) {
+  user(key: { id_expr: "auth.uid" }) {
+    attempts: examAttempts_on_user(orderBy: { startedAt: DESC }) {
+      id
+      status
+      startedAt
+      finishedAt
+      score
+      timeSpentSeconds
+      exam {
+        id
+        title
+      }
+    }
+  }
+}
+
+# Filtra por id + userId_expr: "auth.uid" (en vez de leer por id a secas) para que
+# un usuario no pueda leer el intento de otro adivinando/incrementando el UUID.
+query GetAttemptById($attemptId: UUID!) @auth(level: USER) {
+  examAttempts(where: { id: { eq: $attemptId }, userId: { eq_expr: "auth.uid" } }) {
+    id
+    status
+    startedAt
+    finishedAt
+    score
+    timeSpentSeconds
+    exam {
+      id
+      title
+    }
+    answers: attemptAnswers_on_attempt {
+      question {
+        id
+        statement
+      }
+      selectedOption {
+        id
+        text
+      }
+      isCorrect
+      answeredAt
+    }
+  }
+}

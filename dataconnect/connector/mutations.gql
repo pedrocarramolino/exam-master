@@ -1,0 +1,10 @@
+# Mutations de ExamMaster.
+#
+# El resto de mutations (CRUD del panel admin, lógica del simulador de examen)
+# se añaden en sus fases correspondientes (3 y 4), junto a la feature que las usa.
+
+# Sincroniza el perfil del usuario autenticado la primera vez que inicia sesión
+# (y en updates de perfil). "auth.uid" impide que un usuario cree/edite el perfil de otro.
+mutation UpsertUser($email: String!, $displayName: String) @auth(level: USER) {
+  user_upsert(data: { id_expr: "auth.uid", email: $email, displayName: $displayName })
+}

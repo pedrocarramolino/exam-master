@@ -4,43 +4,35 @@ Always prioritize using a supported framework over using the generated SDK
 directly. Supported frameworks simplify the developer experience and help ensure
 best practices are followed.
 
-### React
 
+
+
+### React
 For each operation, there is a wrapper hook that can be used to call the operation.
 
 Here are all of the hooks that get generated:
-
 ```ts
-import {
-  useCreateMovie,
-  useUpsertUser,
-  useAddReview,
-  useDeleteReview,
-  useListMovies,
-  useListUsers,
-  useListUserReviews,
-  useGetMovieById,
-  useSearchMovie,
-} from '@dataconnect/generated/react';
+import { useUpsertUser, useListExamCategories, useListExamGroupsByCategory, useListExamEditionsByGroup, useListExamsByEdition, useGetExamForAttempt, useGetAttemptReview, useGetMyAttempts, useGetAttemptById } from '@dataconnect/generated/react';
 // The types of these hooks are available in react/index.d.ts
-
-const { data, isPending, isSuccess, isError, error } = useCreateMovie(createMovieVars);
 
 const { data, isPending, isSuccess, isError, error } = useUpsertUser(upsertUserVars);
 
-const { data, isPending, isSuccess, isError, error } = useAddReview(addReviewVars);
+const { data, isPending, isSuccess, isError, error } = useListExamCategories();
 
-const { data, isPending, isSuccess, isError, error } = useDeleteReview(deleteReviewVars);
+const { data, isPending, isSuccess, isError, error } = useListExamGroupsByCategory(listExamGroupsByCategoryVars);
 
-const { data, isPending, isSuccess, isError, error } = useListMovies();
+const { data, isPending, isSuccess, isError, error } = useListExamEditionsByGroup(listExamEditionsByGroupVars);
 
-const { data, isPending, isSuccess, isError, error } = useListUsers();
+const { data, isPending, isSuccess, isError, error } = useListExamsByEdition(listExamsByEditionVars);
 
-const { data, isPending, isSuccess, isError, error } = useListUserReviews();
+const { data, isPending, isSuccess, isError, error } = useGetExamForAttempt(getExamForAttemptVars);
 
-const { data, isPending, isSuccess, isError, error } = useGetMovieById(getMovieByIdVars);
+const { data, isPending, isSuccess, isError, error } = useGetAttemptReview(getAttemptReviewVars);
 
-const { data, isPending, isSuccess, isError, error } = useSearchMovie(searchMovieVars);
+const { data, isPending, isSuccess, isError, error } = useGetMyAttempts();
+
+const { data, isPending, isSuccess, isError, error } = useGetAttemptById(getAttemptByIdVars);
+
 ```
 
 Here's an example from a different generated SDK:
@@ -70,49 +62,43 @@ function App() {
 }
 ```
 
-## Advanced Usage
 
+
+## Advanced Usage
 If a user is not using a supported framework, they can use the generated SDK directly.
 
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import {
-  createMovie,
-  upsertUser,
-  addReview,
-  deleteReview,
-  listMovies,
-  listUsers,
-  listUserReviews,
-  getMovieById,
-  searchMovie,
-} from '@dataconnect/generated';
+import { upsertUser, listExamCategories, listExamGroupsByCategory, listExamEditionsByGroup, listExamsByEdition, getExamForAttempt, getAttemptReview, getMyAttempts, getAttemptById } from '@dataconnect/generated';
 
-// Operation CreateMovie:  For variables, look at type CreateMovieVars in ../index.d.ts
-const { data } = await CreateMovie(dataConnect, createMovieVars);
 
 // Operation UpsertUser:  For variables, look at type UpsertUserVars in ../index.d.ts
 const { data } = await UpsertUser(dataConnect, upsertUserVars);
 
-// Operation AddReview:  For variables, look at type AddReviewVars in ../index.d.ts
-const { data } = await AddReview(dataConnect, addReviewVars);
+// Operation ListExamCategories: 
+const { data } = await ListExamCategories(dataConnect);
 
-// Operation DeleteReview:  For variables, look at type DeleteReviewVars in ../index.d.ts
-const { data } = await DeleteReview(dataConnect, deleteReviewVars);
+// Operation ListExamGroupsByCategory:  For variables, look at type ListExamGroupsByCategoryVars in ../index.d.ts
+const { data } = await ListExamGroupsByCategory(dataConnect, listExamGroupsByCategoryVars);
 
-// Operation ListMovies:
-const { data } = await ListMovies(dataConnect);
+// Operation ListExamEditionsByGroup:  For variables, look at type ListExamEditionsByGroupVars in ../index.d.ts
+const { data } = await ListExamEditionsByGroup(dataConnect, listExamEditionsByGroupVars);
 
-// Operation ListUsers:
-const { data } = await ListUsers(dataConnect);
+// Operation ListExamsByEdition:  For variables, look at type ListExamsByEditionVars in ../index.d.ts
+const { data } = await ListExamsByEdition(dataConnect, listExamsByEditionVars);
 
-// Operation ListUserReviews:
-const { data } = await ListUserReviews(dataConnect);
+// Operation GetExamForAttempt:  For variables, look at type GetExamForAttemptVars in ../index.d.ts
+const { data } = await GetExamForAttempt(dataConnect, getExamForAttemptVars);
 
-// Operation GetMovieById:  For variables, look at type GetMovieByIdVars in ../index.d.ts
-const { data } = await GetMovieById(dataConnect, getMovieByIdVars);
+// Operation GetAttemptReview:  For variables, look at type GetAttemptReviewVars in ../index.d.ts
+const { data } = await GetAttemptReview(dataConnect, getAttemptReviewVars);
 
-// Operation SearchMovie:  For variables, look at type SearchMovieVars in ../index.d.ts
-const { data } = await SearchMovie(dataConnect, searchMovieVars);
+// Operation GetMyAttempts: 
+const { data } = await GetMyAttempts(dataConnect);
+
+// Operation GetAttemptById:  For variables, look at type GetAttemptByIdVars in ../index.d.ts
+const { data } = await GetAttemptById(dataConnect, getAttemptByIdVars);
+
+
 ```

@@ -1,13 +1,4 @@
-import {
-  ConnectorConfig,
-  DataConnect,
-  QueryRef,
-  QueryPromise,
-  ExecuteQueryOptions,
-  MutationRef,
-  MutationPromise,
-  DataConnectSettings,
-} from 'firebase/data-connect';
+import { ConnectorConfig, DataConnect, QueryRef, QueryPromise, ExecuteQueryOptions, MutationRef, MutationPromise, DataConnectSettings } from 'firebase/data-connect';
 
 export const connectorConfig: ConnectorConfig;
 export const dataConnectSettings: DataConnectSettings;
@@ -17,121 +8,201 @@ export type UUIDString = string;
 export type Int64String = string;
 export type DateString = string;
 
-export interface AddReviewData {
-  review_upsert: Review_Key;
-}
 
-export interface AddReviewVariables {
-  movieId: UUIDString;
-  rating: number;
-  reviewText: string;
-}
+export enum AttemptStatus {
+  IN_PROGRESS = "IN_PROGRESS",
+  FINISHED = "FINISHED",
+  ABANDONED = "ABANDONED",
+};
 
-export interface CreateMovieData {
-  movie_insert: Movie_Key;
-}
 
-export interface CreateMovieVariables {
-  title: string;
-  genre: string;
-  imageUrl: string;
-}
 
-export interface DeleteReviewData {
-  review_delete?: Review_Key | null;
-}
-
-export interface DeleteReviewVariables {
-  movieId: UUIDString;
-}
-
-export interface GetMovieByIdData {
-  movie?: {
-    id: UUIDString;
-    title: string;
-    imageUrl: string;
-    genre?: string | null;
-    metadata?: {
-      rating?: number | null;
-      releaseYear?: number | null;
-      description?: string | null;
-    };
-    reviews: {
-      reviewText?: string | null;
-      reviewDate: DateString;
-      rating?: number | null;
-      user: {
-        id: string;
-        username: string;
-      } & User_Key;
-    }[];
-  } & Movie_Key;
-}
-
-export interface GetMovieByIdVariables {
+export interface AnswerOption_Key {
   id: UUIDString;
+  __typename?: 'AnswerOption_Key';
 }
 
-export interface ListMoviesData {
-  movies: ({
+export interface AttemptAnswer_Key {
+  attemptId: UUIDString;
+  questionId: UUIDString;
+  __typename?: 'AttemptAnswer_Key';
+}
+
+export interface ExamAttempt_Key {
+  id: UUIDString;
+  __typename?: 'ExamAttempt_Key';
+}
+
+export interface ExamCategory_Key {
+  id: UUIDString;
+  __typename?: 'ExamCategory_Key';
+}
+
+export interface ExamEdition_Key {
+  id: UUIDString;
+  __typename?: 'ExamEdition_Key';
+}
+
+export interface ExamGroup_Key {
+  id: UUIDString;
+  __typename?: 'ExamGroup_Key';
+}
+
+export interface Exam_Key {
+  id: UUIDString;
+  __typename?: 'Exam_Key';
+}
+
+export interface GetAttemptByIdData {
+  examAttempts: ({
+    id: UUIDString;
+    status: AttemptStatus;
+    startedAt: TimestampString;
+    finishedAt?: TimestampString | null;
+    score?: number | null;
+    timeSpentSeconds?: number | null;
+    exam: {
+      id: UUIDString;
+      title: string;
+    } & Exam_Key;
+    answers: ({
+      question: {
+        id: UUIDString;
+        statement: string;
+      } & Question_Key;
+      selectedOption?: {
+        id: UUIDString;
+        text: string;
+      } & AnswerOption_Key;
+      isCorrect?: boolean | null;
+      answeredAt: TimestampString;
+    })[];
+  } & ExamAttempt_Key)[];
+}
+
+export interface GetAttemptByIdVariables {
+  attemptId: UUIDString;
+}
+
+export interface GetAttemptReviewData {
+  examAttempts: ({
+    id: UUIDString;
+    exam: {
+      id: UUIDString;
+      title: string;
+      questions: ({
+        id: UUIDString;
+        statement: string;
+        explanation?: string | null;
+        optionsWithAnswer: ({
+          id: UUIDString;
+          text: string;
+          isCorrect: boolean;
+          position: number;
+        } & AnswerOption_Key)[];
+      } & Question_Key)[];
+    } & Exam_Key;
+  } & ExamAttempt_Key)[];
+}
+
+export interface GetAttemptReviewVariables {
+  attemptId: UUIDString;
+}
+
+export interface GetExamForAttemptData {
+  exam?: {
     id: UUIDString;
     title: string;
-    imageUrl: string;
-    genre?: string | null;
-  } & Movie_Key)[];
+    durationMinutes: number;
+    questions: ({
+      id: UUIDString;
+      statement: string;
+      difficulty: QuestionDifficulty;
+      options: ({
+        id: UUIDString;
+        text: string;
+        position: number;
+      } & AnswerOption_Key)[];
+    } & Question_Key)[];
+  } & Exam_Key;
 }
 
-export interface ListUserReviewsData {
+export interface GetExamForAttemptVariables {
+  examId: UUIDString;
+}
+
+export interface GetMyAttemptsData {
   user?: {
-    id: string;
-    username: string;
-    reviews: {
-      rating?: number | null;
-      reviewDate: DateString;
-      reviewText?: string | null;
-      movie: {
+    attempts: ({
+      id: UUIDString;
+      status: AttemptStatus;
+      startedAt: TimestampString;
+      finishedAt?: TimestampString | null;
+      score?: number | null;
+      timeSpentSeconds?: number | null;
+      exam: {
         id: UUIDString;
         title: string;
-      } & Movie_Key;
-    }[];
-  } & User_Key;
+      } & Exam_Key;
+    } & ExamAttempt_Key)[];
+  };
 }
 
-export interface ListUsersData {
-  users: ({
-    id: string;
-    username: string;
-  } & User_Key)[];
+export interface ListExamCategoriesData {
+  examCategories: ({
+    id: UUIDString;
+    name: string;
+    slug: string;
+    description?: string | null;
+  } & ExamCategory_Key)[];
 }
 
-export interface MovieMetadata_Key {
-  id: UUIDString;
-  __typename?: 'MovieMetadata_Key';
+export interface ListExamEditionsByGroupData {
+  examEditions: ({
+    id: UUIDString;
+    year: number;
+    label?: string | null;
+    examDate?: DateString | null;
+  } & ExamEdition_Key)[];
 }
 
-export interface Movie_Key {
-  id: UUIDString;
-  __typename?: 'Movie_Key';
+export interface ListExamEditionsByGroupVariables {
+  groupId: UUIDString;
 }
 
-export interface Review_Key {
-  userId: string;
-  movieId: UUIDString;
-  __typename?: 'Review_Key';
+export interface ListExamGroupsByCategoryData {
+  examGroups: ({
+    id: UUIDString;
+    name: string;
+    slug: string;
+  } & ExamGroup_Key)[];
 }
 
-export interface SearchMovieData {
-  movies: ({
+export interface ListExamGroupsByCategoryVariables {
+  categoryId: UUIDString;
+}
+
+export interface ListExamsByEditionData {
+  exams: ({
     id: UUIDString;
     title: string;
-    genre?: string | null;
-    imageUrl: string;
-  } & Movie_Key)[];
+    description?: string | null;
+    durationMinutes: number;
+  } & Exam_Key)[];
 }
 
-export interface SearchMovieVariables {
-  titleInput?: string | null;
-  genre?: string | null;
+export interface ListExamsByEditionVariables {
+  editionId: UUIDString;
+}
+
+export interface Question_Key {
+  id: UUIDString;
+  __typename?: 'Question_Key';
+}
+
+export interface Topic_Key {
+  id: UUIDString;
+  __typename?: 'Topic_Key';
 }
 
 export interface UpsertUserData {
@@ -139,30 +210,14 @@ export interface UpsertUserData {
 }
 
 export interface UpsertUserVariables {
-  username: string;
+  email: string;
+  displayName?: string | null;
 }
 
 export interface User_Key {
   id: string;
   __typename?: 'User_Key';
 }
-
-interface CreateMovieRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateMovieVariables): MutationRef<CreateMovieData, CreateMovieVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: CreateMovieVariables): MutationRef<CreateMovieData, CreateMovieVariables>;
-  operationName: string;
-}
-export const createMovieRef: CreateMovieRef;
-
-export function createMovie(
-  vars: CreateMovieVariables,
-): MutationPromise<CreateMovieData, CreateMovieVariables>;
-export function createMovie(
-  dc: DataConnect,
-  vars: CreateMovieVariables,
-): MutationPromise<CreateMovieData, CreateMovieVariables>;
 
 interface UpsertUserRef {
   /* Allow users to create refs without passing in DataConnect */
@@ -173,132 +228,102 @@ interface UpsertUserRef {
 }
 export const upsertUserRef: UpsertUserRef;
 
-export function upsertUser(
-  vars: UpsertUserVariables,
-): MutationPromise<UpsertUserData, UpsertUserVariables>;
-export function upsertUser(
-  dc: DataConnect,
-  vars: UpsertUserVariables,
-): MutationPromise<UpsertUserData, UpsertUserVariables>;
+export function upsertUser(vars: UpsertUserVariables): MutationPromise<UpsertUserData, UpsertUserVariables>;
+export function upsertUser(dc: DataConnect, vars: UpsertUserVariables): MutationPromise<UpsertUserData, UpsertUserVariables>;
 
-interface AddReviewRef {
+interface ListExamCategoriesRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: AddReviewVariables): MutationRef<AddReviewData, AddReviewVariables>;
+  (): QueryRef<ListExamCategoriesData, undefined>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: AddReviewVariables): MutationRef<AddReviewData, AddReviewVariables>;
+  (dc: DataConnect): QueryRef<ListExamCategoriesData, undefined>;
   operationName: string;
 }
-export const addReviewRef: AddReviewRef;
+export const listExamCategoriesRef: ListExamCategoriesRef;
 
-export function addReview(
-  vars: AddReviewVariables,
-): MutationPromise<AddReviewData, AddReviewVariables>;
-export function addReview(
-  dc: DataConnect,
-  vars: AddReviewVariables,
-): MutationPromise<AddReviewData, AddReviewVariables>;
+export function listExamCategories(options?: ExecuteQueryOptions): QueryPromise<ListExamCategoriesData, undefined>;
+export function listExamCategories(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListExamCategoriesData, undefined>;
 
-interface DeleteReviewRef {
+interface ListExamGroupsByCategoryRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: DeleteReviewVariables): MutationRef<DeleteReviewData, DeleteReviewVariables>;
+  (vars: ListExamGroupsByCategoryVariables): QueryRef<ListExamGroupsByCategoryData, ListExamGroupsByCategoryVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (
-    dc: DataConnect,
-    vars: DeleteReviewVariables,
-  ): MutationRef<DeleteReviewData, DeleteReviewVariables>;
+  (dc: DataConnect, vars: ListExamGroupsByCategoryVariables): QueryRef<ListExamGroupsByCategoryData, ListExamGroupsByCategoryVariables>;
   operationName: string;
 }
-export const deleteReviewRef: DeleteReviewRef;
+export const listExamGroupsByCategoryRef: ListExamGroupsByCategoryRef;
 
-export function deleteReview(
-  vars: DeleteReviewVariables,
-): MutationPromise<DeleteReviewData, DeleteReviewVariables>;
-export function deleteReview(
-  dc: DataConnect,
-  vars: DeleteReviewVariables,
-): MutationPromise<DeleteReviewData, DeleteReviewVariables>;
+export function listExamGroupsByCategory(vars: ListExamGroupsByCategoryVariables, options?: ExecuteQueryOptions): QueryPromise<ListExamGroupsByCategoryData, ListExamGroupsByCategoryVariables>;
+export function listExamGroupsByCategory(dc: DataConnect, vars: ListExamGroupsByCategoryVariables, options?: ExecuteQueryOptions): QueryPromise<ListExamGroupsByCategoryData, ListExamGroupsByCategoryVariables>;
 
-interface ListMoviesRef {
+interface ListExamEditionsByGroupRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListMoviesData, undefined>;
+  (vars: ListExamEditionsByGroupVariables): QueryRef<ListExamEditionsByGroupData, ListExamEditionsByGroupVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListMoviesData, undefined>;
+  (dc: DataConnect, vars: ListExamEditionsByGroupVariables): QueryRef<ListExamEditionsByGroupData, ListExamEditionsByGroupVariables>;
   operationName: string;
 }
-export const listMoviesRef: ListMoviesRef;
+export const listExamEditionsByGroupRef: ListExamEditionsByGroupRef;
 
-export function listMovies(options?: ExecuteQueryOptions): QueryPromise<ListMoviesData, undefined>;
-export function listMovies(
-  dc: DataConnect,
-  options?: ExecuteQueryOptions,
-): QueryPromise<ListMoviesData, undefined>;
+export function listExamEditionsByGroup(vars: ListExamEditionsByGroupVariables, options?: ExecuteQueryOptions): QueryPromise<ListExamEditionsByGroupData, ListExamEditionsByGroupVariables>;
+export function listExamEditionsByGroup(dc: DataConnect, vars: ListExamEditionsByGroupVariables, options?: ExecuteQueryOptions): QueryPromise<ListExamEditionsByGroupData, ListExamEditionsByGroupVariables>;
 
-interface ListUsersRef {
+interface ListExamsByEditionRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListUsersData, undefined>;
+  (vars: ListExamsByEditionVariables): QueryRef<ListExamsByEditionData, ListExamsByEditionVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListUsersData, undefined>;
+  (dc: DataConnect, vars: ListExamsByEditionVariables): QueryRef<ListExamsByEditionData, ListExamsByEditionVariables>;
   operationName: string;
 }
-export const listUsersRef: ListUsersRef;
+export const listExamsByEditionRef: ListExamsByEditionRef;
 
-export function listUsers(options?: ExecuteQueryOptions): QueryPromise<ListUsersData, undefined>;
-export function listUsers(
-  dc: DataConnect,
-  options?: ExecuteQueryOptions,
-): QueryPromise<ListUsersData, undefined>;
+export function listExamsByEdition(vars: ListExamsByEditionVariables, options?: ExecuteQueryOptions): QueryPromise<ListExamsByEditionData, ListExamsByEditionVariables>;
+export function listExamsByEdition(dc: DataConnect, vars: ListExamsByEditionVariables, options?: ExecuteQueryOptions): QueryPromise<ListExamsByEditionData, ListExamsByEditionVariables>;
 
-interface ListUserReviewsRef {
+interface GetExamForAttemptRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListUserReviewsData, undefined>;
+  (vars: GetExamForAttemptVariables): QueryRef<GetExamForAttemptData, GetExamForAttemptVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListUserReviewsData, undefined>;
+  (dc: DataConnect, vars: GetExamForAttemptVariables): QueryRef<GetExamForAttemptData, GetExamForAttemptVariables>;
   operationName: string;
 }
-export const listUserReviewsRef: ListUserReviewsRef;
+export const getExamForAttemptRef: GetExamForAttemptRef;
 
-export function listUserReviews(
-  options?: ExecuteQueryOptions,
-): QueryPromise<ListUserReviewsData, undefined>;
-export function listUserReviews(
-  dc: DataConnect,
-  options?: ExecuteQueryOptions,
-): QueryPromise<ListUserReviewsData, undefined>;
+export function getExamForAttempt(vars: GetExamForAttemptVariables, options?: ExecuteQueryOptions): QueryPromise<GetExamForAttemptData, GetExamForAttemptVariables>;
+export function getExamForAttempt(dc: DataConnect, vars: GetExamForAttemptVariables, options?: ExecuteQueryOptions): QueryPromise<GetExamForAttemptData, GetExamForAttemptVariables>;
 
-interface GetMovieByIdRef {
+interface GetAttemptReviewRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: GetMovieByIdVariables): QueryRef<GetMovieByIdData, GetMovieByIdVariables>;
+  (vars: GetAttemptReviewVariables): QueryRef<GetAttemptReviewData, GetAttemptReviewVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: GetMovieByIdVariables): QueryRef<GetMovieByIdData, GetMovieByIdVariables>;
+  (dc: DataConnect, vars: GetAttemptReviewVariables): QueryRef<GetAttemptReviewData, GetAttemptReviewVariables>;
   operationName: string;
 }
-export const getMovieByIdRef: GetMovieByIdRef;
+export const getAttemptReviewRef: GetAttemptReviewRef;
 
-export function getMovieById(
-  vars: GetMovieByIdVariables,
-  options?: ExecuteQueryOptions,
-): QueryPromise<GetMovieByIdData, GetMovieByIdVariables>;
-export function getMovieById(
-  dc: DataConnect,
-  vars: GetMovieByIdVariables,
-  options?: ExecuteQueryOptions,
-): QueryPromise<GetMovieByIdData, GetMovieByIdVariables>;
+export function getAttemptReview(vars: GetAttemptReviewVariables, options?: ExecuteQueryOptions): QueryPromise<GetAttemptReviewData, GetAttemptReviewVariables>;
+export function getAttemptReview(dc: DataConnect, vars: GetAttemptReviewVariables, options?: ExecuteQueryOptions): QueryPromise<GetAttemptReviewData, GetAttemptReviewVariables>;
 
-interface SearchMovieRef {
+interface GetMyAttemptsRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars?: SearchMovieVariables): QueryRef<SearchMovieData, SearchMovieVariables>;
+  (): QueryRef<GetMyAttemptsData, undefined>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: SearchMovieVariables): QueryRef<SearchMovieData, SearchMovieVariables>;
+  (dc: DataConnect): QueryRef<GetMyAttemptsData, undefined>;
   operationName: string;
 }
-export const searchMovieRef: SearchMovieRef;
+export const getMyAttemptsRef: GetMyAttemptsRef;
 
-export function searchMovie(
-  vars?: SearchMovieVariables,
-  options?: ExecuteQueryOptions,
-): QueryPromise<SearchMovieData, SearchMovieVariables>;
-export function searchMovie(
-  dc: DataConnect,
-  vars?: SearchMovieVariables,
-  options?: ExecuteQueryOptions,
-): QueryPromise<SearchMovieData, SearchMovieVariables>;
+export function getMyAttempts(options?: ExecuteQueryOptions): QueryPromise<GetMyAttemptsData, undefined>;
+export function getMyAttempts(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<GetMyAttemptsData, undefined>;
+
+interface GetAttemptByIdRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetAttemptByIdVariables): QueryRef<GetAttemptByIdData, GetAttemptByIdVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetAttemptByIdVariables): QueryRef<GetAttemptByIdData, GetAttemptByIdVariables>;
+  operationName: string;
+}
+export const getAttemptByIdRef: GetAttemptByIdRef;
+
+export function getAttemptById(vars: GetAttemptByIdVariables, options?: ExecuteQueryOptions): QueryPromise<GetAttemptByIdData, GetAttemptByIdVariables>;
+export function getAttemptById(dc: DataConnect, vars: GetAttemptByIdVariables, options?: ExecuteQueryOptions): QueryPromise<GetAttemptByIdData, GetAttemptByIdVariables>;
+
