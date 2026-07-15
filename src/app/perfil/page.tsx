@@ -35,6 +35,9 @@ export default async function ProfilePage() {
           <Link href="/simulador" className={buttonVariants({})}>
             Practicar
           </Link>
+          <Link href="/estadisticas" className={buttonVariants({ variant: 'outline' })}>
+            Estadísticas
+          </Link>
           <LogoutButton />
         </CardContent>
       </Card>

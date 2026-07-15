@@ -460,6 +460,21 @@ exports.getMyAttempts = function getMyAttempts(dcOrOptions, options) {
 }
 ;
 
+const getMyAnswersWithTopicRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetMyAnswersWithTopic');
+}
+getMyAnswersWithTopicRef.operationName = 'GetMyAnswersWithTopic';
+exports.getMyAnswersWithTopicRef = getMyAnswersWithTopicRef;
+
+exports.getMyAnswersWithTopic = function getMyAnswersWithTopic(dcOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
+  return executeQuery(getMyAnswersWithTopicRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
 const getInProgressAttemptRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();

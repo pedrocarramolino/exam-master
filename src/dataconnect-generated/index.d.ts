@@ -384,6 +384,21 @@ export interface GetInProgressAttemptVariables {
   examId: UUIDString;
 }
 
+export interface GetMyAnswersWithTopicData {
+  attemptAnswers: ({
+    isCorrect?: boolean | null;
+    attempt: {
+      status: AttemptStatus;
+    };
+    question: {
+      topic?: {
+        id: UUIDString;
+        name: string;
+      } & Topic_Key;
+    };
+  })[];
+}
+
 export interface GetMyAttemptsData {
   user?: {
     attempts: ({
@@ -931,6 +946,18 @@ export const getMyAttemptsRef: GetMyAttemptsRef;
 
 export function getMyAttempts(options?: ExecuteQueryOptions): QueryPromise<GetMyAttemptsData, undefined>;
 export function getMyAttempts(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<GetMyAttemptsData, undefined>;
+
+interface GetMyAnswersWithTopicRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetMyAnswersWithTopicData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<GetMyAnswersWithTopicData, undefined>;
+  operationName: string;
+}
+export const getMyAnswersWithTopicRef: GetMyAnswersWithTopicRef;
+
+export function getMyAnswersWithTopic(options?: ExecuteQueryOptions): QueryPromise<GetMyAnswersWithTopicData, undefined>;
+export function getMyAnswersWithTopic(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<GetMyAnswersWithTopicData, undefined>;
 
 interface GetInProgressAttemptRef {
   /* Allow users to create refs without passing in DataConnect */

@@ -17,6 +17,7 @@ This README will guide you through the process of using the generated JavaScript
   - [*GetExamForAttempt*](#getexamforattempt)
   - [*GetAttemptReview*](#getattemptreview)
   - [*GetMyAttempts*](#getmyattempts)
+  - [*GetMyAnswersWithTopic*](#getmyanswerswithtopic)
   - [*GetInProgressAttempt*](#getinprogressattempt)
   - [*GetAttemptById*](#getattemptbyid)
   - [*GetUserRole*](#getuserrole)
@@ -883,6 +884,108 @@ console.log(data.user);
 executeQuery(ref).then((response) => {
   const data = response.data;
   console.log(data.user);
+});
+```
+
+## GetMyAnswersWithTopic
+You can execute the `GetMyAnswersWithTopic` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getMyAnswersWithTopic(options?: ExecuteQueryOptions): QueryPromise<GetMyAnswersWithTopicData, undefined>;
+
+interface GetMyAnswersWithTopicRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetMyAnswersWithTopicData, undefined>;
+}
+export const getMyAnswersWithTopicRef: GetMyAnswersWithTopicRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getMyAnswersWithTopic(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<GetMyAnswersWithTopicData, undefined>;
+
+interface GetMyAnswersWithTopicRef {
+  ...
+  (dc: DataConnect): QueryRef<GetMyAnswersWithTopicData, undefined>;
+}
+export const getMyAnswersWithTopicRef: GetMyAnswersWithTopicRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getMyAnswersWithTopicRef:
+```typescript
+const name = getMyAnswersWithTopicRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetMyAnswersWithTopic` query has no variables.
+### Return Type
+Recall that executing the `GetMyAnswersWithTopic` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetMyAnswersWithTopicData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetMyAnswersWithTopicData {
+  attemptAnswers: ({
+    isCorrect?: boolean | null;
+    attempt: {
+      status: AttemptStatus;
+    };
+    question: {
+      topic?: {
+        id: UUIDString;
+        name: string;
+      } & Topic_Key;
+    };
+  })[];
+}
+```
+### Using `GetMyAnswersWithTopic`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getMyAnswersWithTopic } from '@dataconnect/generated';
+
+
+// Call the `getMyAnswersWithTopic()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getMyAnswersWithTopic();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getMyAnswersWithTopic(dataConnect);
+
+console.log(data.attemptAnswers);
+
+// Or, you can use the `Promise` API.
+getMyAnswersWithTopic().then((response) => {
+  const data = response.data;
+  console.log(data.attemptAnswers);
+});
+```
+
+### Using `GetMyAnswersWithTopic`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getMyAnswersWithTopicRef } from '@dataconnect/generated';
+
+
+// Call the `getMyAnswersWithTopicRef()` function to get a reference to the query.
+const ref = getMyAnswersWithTopicRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getMyAnswersWithTopicRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.attemptAnswers);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.attemptAnswers);
 });
 ```
 

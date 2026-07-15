@@ -110,6 +110,24 @@ query GetMyAttempts @auth(level: USER) {
   }
 }
 
+# --- Estadísticas: respuestas del usuario con el tema de cada pregunta ---
+# Los agregados (media, mejor/peor nota...) se calculan en el caso de uso a partir
+# de GetMyAttempts; esta query solo aporta el detalle respuesta<->tema.
+query GetMyAnswersWithTopic @auth(level: USER) {
+  attemptAnswers(where: { attempt: { userId: { eq_expr: "auth.uid" } } }) {
+    isCorrect
+    attempt {
+      status
+    }
+    question {
+      topic {
+        id
+        name
+      }
+    }
+  }
+}
+
 # ¿Ya hay un intento en curso de este examen? Para retomarlo en vez de duplicar.
 query GetInProgressAttempt($examId: UUID!) @auth(level: USER) {
   examAttempts(
