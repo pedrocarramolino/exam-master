@@ -138,3 +138,84 @@ query GetAttemptById($attemptId: UUID!) @auth(level: USER) {
     }
   }
 }
+
+# --- Panel de administración ---
+# Todas @auth(level: NO_ACCESS): nunca las llama el cliente, solo el Admin SDK
+# desde Server Actions (que ya comprobó el rol ADMIN antes de invocarlas).
+
+query GetUserRole($userId: String!) @auth(level: NO_ACCESS) {
+  user(id: $userId) {
+    role
+  }
+}
+
+query AdminListGroups($categoryId: UUID!) @auth(level: NO_ACCESS) {
+  examGroups(where: { categoryId: { eq: $categoryId } }, orderBy: { name: ASC }) {
+    id
+    categoryId
+    name
+    slug
+  }
+}
+
+query AdminListEditions($groupId: UUID!) @auth(level: NO_ACCESS) {
+  examEditions(where: { groupId: { eq: $groupId } }, orderBy: { year: DESC }) {
+    id
+    groupId
+    year
+    label
+    examDate
+  }
+}
+
+query AdminListExams($editionId: UUID!) @auth(level: NO_ACCESS) {
+  exams(where: { editionId: { eq: $editionId } }, orderBy: { title: ASC }) {
+    id
+    editionId
+    title
+    description
+    durationMinutes
+  }
+}
+
+query AdminListTopics($categoryId: UUID!) @auth(level: NO_ACCESS) {
+  topics(where: { categoryId: { eq: $categoryId } }, orderBy: { name: ASC }) {
+    id
+    categoryId
+    name
+  }
+}
+
+query AdminListQuestions($examId: UUID!) @auth(level: NO_ACCESS) {
+  questions(where: { examId: { eq: $examId } }, orderBy: { createdAt: ASC }) {
+    id
+    examId
+    topicId
+    statement
+    explanation
+    difficulty
+    optionsForList: answerOptions_on_question(orderBy: { position: ASC }) {
+      id
+      text
+      isCorrect
+      position
+    }
+  }
+}
+
+query AdminGetQuestion($questionId: UUID!) @auth(level: NO_ACCESS) {
+  question(id: $questionId) {
+    id
+    examId
+    topicId
+    statement
+    explanation
+    difficulty
+    optionsForGet: answerOptions_on_question(orderBy: { position: ASC }) {
+      id
+      text
+      isCorrect
+      position
+    }
+  }
+}

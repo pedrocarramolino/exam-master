@@ -6,7 +6,7 @@ export async function proxy(request: NextRequest) {
   return protectRoute(request);
 }
 
-// Rutas que exigen sesión. Se amplía según se construyan admin/simulador.
+// Rutas que exigen sesión. /admin además comprueba el rol ADMIN en su layout.
 export const config = {
-  matcher: ['/perfil/:path*'],
+  matcher: ['/perfil/:path*', '/admin/:path*'],
 };

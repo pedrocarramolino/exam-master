@@ -1,10 +1,181 @@
 # Mutations de ExamMaster.
 #
-# El resto de mutations (CRUD del panel admin, lógica del simulador de examen)
-# se añaden en sus fases correspondientes (3 y 4), junto a la feature que las usa.
+# La lógica del simulador de examen se añade en la Fase 4, junto a esa feature.
 
 # Sincroniza el perfil del usuario autenticado la primera vez que inicia sesión
 # (y en updates de perfil). "auth.uid" impide que un usuario cree/edite el perfil de otro.
 mutation UpsertUser($email: String!, $displayName: String) @auth(level: USER) {
   user_upsert(data: { id_expr: "auth.uid", email: $email, displayName: $displayName })
+}
+
+# --- Panel de administración ---
+# Todas @auth(level: NO_ACCESS): nunca las llama el cliente, solo el Admin SDK
+# desde Server Actions (que ya comprobó el rol ADMIN antes de invocarlas).
+
+mutation CreateExamCategory($name: String!, $slug: String!, $description: String)
+@auth(level: NO_ACCESS) {
+  examCategory_insert(data: { name: $name, slug: $slug, description: $description })
+}
+
+mutation UpdateExamCategory(
+  $categoryId: UUID!
+  $name: String!
+  $slug: String!
+  $description: String
+) @auth(level: NO_ACCESS) {
+  examCategory_update(
+    id: $categoryId
+    data: { name: $name, slug: $slug, description: $description }
+  )
+}
+
+mutation DeleteExamCategory($categoryId: UUID!) @auth(level: NO_ACCESS) {
+  examCategory_delete(id: $categoryId)
+}
+
+mutation CreateExamGroup($categoryId: UUID!, $name: String!, $slug: String!)
+@auth(level: NO_ACCESS) {
+  examGroup_insert(data: { categoryId: $categoryId, name: $name, slug: $slug })
+}
+
+mutation UpdateExamGroup($groupId: UUID!, $name: String!, $slug: String!)
+@auth(level: NO_ACCESS) {
+  examGroup_update(id: $groupId, data: { name: $name, slug: $slug })
+}
+
+mutation DeleteExamGroup($groupId: UUID!) @auth(level: NO_ACCESS) {
+  examGroup_delete(id: $groupId)
+}
+
+mutation CreateExamEdition($groupId: UUID!, $year: Int!, $label: String) @auth(level: NO_ACCESS) {
+  examEdition_insert(data: { groupId: $groupId, year: $year, label: $label })
+}
+
+mutation UpdateExamEdition($editionId: UUID!, $year: Int!, $label: String)
+@auth(level: NO_ACCESS) {
+  examEdition_update(id: $editionId, data: { year: $year, label: $label })
+}
+
+mutation DeleteExamEdition($editionId: UUID!) @auth(level: NO_ACCESS) {
+  examEdition_delete(id: $editionId)
+}
+
+mutation CreateExam(
+  $editionId: UUID!
+  $title: String!
+  $description: String
+  $durationMinutes: Int!
+) @auth(level: NO_ACCESS) {
+  exam_insert(
+    data: {
+      editionId: $editionId
+      title: $title
+      description: $description
+      durationMinutes: $durationMinutes
+    }
+  )
+}
+
+mutation UpdateExam($examId: UUID!, $title: String!, $description: String, $durationMinutes: Int!)
+@auth(level: NO_ACCESS) {
+  exam_update(
+    id: $examId
+    data: { title: $title, description: $description, durationMinutes: $durationMinutes }
+  )
+}
+
+mutation DeleteExam($examId: UUID!) @auth(level: NO_ACCESS) {
+  exam_delete(id: $examId)
+}
+
+mutation CreateTopic($categoryId: UUID!, $name: String!) @auth(level: NO_ACCESS) {
+  topic_insert(data: { categoryId: $categoryId, name: $name })
+}
+
+mutation DeleteTopic($topicId: UUID!) @auth(level: NO_ACCESS) {
+  topic_delete(id: $topicId)
+}
+
+# Siempre 4 respuestas (requisito de producto): 4 slots explícitos en vez de una
+# lista, porque el SDK generado todavía no soporta variables de tipo "_Data".
+mutation CreateQuestion(
+  $examId: UUID!
+  $topicId: UUID
+  $statement: String!
+  $explanation: String
+  $difficulty: QuestionDifficulty!
+  $option1Text: String!
+  $option1IsCorrect: Boolean!
+  $option2Text: String!
+  $option2IsCorrect: Boolean!
+  $option3Text: String!
+  $option3IsCorrect: Boolean!
+  $option4Text: String!
+  $option4IsCorrect: Boolean!
+) @auth(level: NO_ACCESS) {
+  question_insert(
+    data: {
+      examId: $examId
+      topicId: $topicId
+      statement: $statement
+      explanation: $explanation
+      difficulty: $difficulty
+      answerOptions_on_question: [
+        { text: $option1Text, isCorrect: $option1IsCorrect, position: 1 }
+        { text: $option2Text, isCorrect: $option2IsCorrect, position: 2 }
+        { text: $option3Text, isCorrect: $option3IsCorrect, position: 3 }
+        { text: $option4Text, isCorrect: $option4IsCorrect, position: 4 }
+      ]
+    }
+  )
+}
+
+mutation UpdateQuestion(
+  $questionId: UUID!
+  $topicId: UUID
+  $statement: String!
+  $explanation: String
+  $difficulty: QuestionDifficulty!
+) @auth(level: NO_ACCESS) {
+  question_update(
+    id: $questionId
+    data: {
+      topicId: $topicId
+      statement: $statement
+      explanation: $explanation
+      difficulty: $difficulty
+    }
+  )
+}
+
+# Debe llamarse antes de DeleteQuestion: AnswerOption.question es obligatoria (NOT NULL),
+# así que las opciones de la pregunta hay que borrarlas primero.
+mutation DeleteAnswerOptionsByQuestion($questionId: UUID!) @auth(level: NO_ACCESS) {
+  answerOption_deleteMany(where: { questionId: { eq: $questionId } })
+}
+
+mutation DeleteQuestion($questionId: UUID!) @auth(level: NO_ACCESS) {
+  question_delete(id: $questionId)
+}
+
+mutation ReplaceAnswerOptions(
+  $questionId: UUID!
+  $option1Text: String!
+  $option1IsCorrect: Boolean!
+  $option2Text: String!
+  $option2IsCorrect: Boolean!
+  $option3Text: String!
+  $option3IsCorrect: Boolean!
+  $option4Text: String!
+  $option4IsCorrect: Boolean!
+) @auth(level: NO_ACCESS) {
+  answerOption_deleteMany(where: { questionId: { eq: $questionId } })
+  answerOption_insertMany(
+    data: [
+      { questionId: $questionId, text: $option1Text, isCorrect: $option1IsCorrect, position: 1 }
+      { questionId: $questionId, text: $option2Text, isCorrect: $option2IsCorrect, position: 2 }
+      { questionId: $questionId, text: $option3Text, isCorrect: $option3IsCorrect, position: 3 }
+      { questionId: $questionId, text: $option4Text, isCorrect: $option4IsCorrect, position: 4 }
+    ]
+  )
 }
