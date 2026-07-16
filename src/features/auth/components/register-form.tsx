@@ -6,6 +6,7 @@ import { useState, type FormEvent } from 'react';
 import { registerUser } from '@/application/use-cases/register-user';
 import { AuthError } from '@/domain/errors/auth-error';
 import { establishSession } from '@/features/auth/establish-session';
+import { PasswordInput } from '@/features/auth/components/password-input';
 import { registerSchema } from '@/features/auth/schemas';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
@@ -21,6 +22,8 @@ export function RegisterForm() {
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,7 +31,13 @@ export function RegisterForm() {
     event.preventDefault();
     setError(null);
 
-    const parsed = registerSchema.safeParse({ displayName, email, password });
+    const parsed = registerSchema.safeParse({
+      displayName,
+      email,
+      password,
+      confirmPassword,
+      acceptTerms,
+    });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? 'Datos inválidos.');
       return;
@@ -36,7 +45,11 @@ export function RegisterForm() {
 
     setIsSubmitting(true);
     try {
-      await registerUser(authRepository, userRepository, parsed.data);
+      await registerUser(authRepository, userRepository, {
+        displayName: parsed.data.displayName,
+        email: parsed.data.email,
+        password: parsed.data.password,
+      });
       await establishSession(authRepository);
       router.push('/perfil');
       router.refresh();
@@ -70,14 +83,33 @@ export function RegisterForm() {
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="password">Contraseña</Label>
-        <Input
+        <PasswordInput
           id="password"
-          type="password"
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="confirmPassword">Repetir contraseña</Label>
+        <PasswordInput
+          id="confirmPassword"
+          autoComplete="new-password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+      </div>
+      <label className="flex items-start gap-2 text-sm">
+        <input
+          type="checkbox"
+          className="mt-0.5"
+          checked={acceptTerms}
+          onChange={(e) => setAcceptTerms(e.target.checked)}
+        />
+        <span className="text-muted-foreground">
+          Acepto los términos de uso y la política de privacidad.
+        </span>
+      </label>
       {error && <p className="text-destructive text-sm">{error}</p>}
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'}

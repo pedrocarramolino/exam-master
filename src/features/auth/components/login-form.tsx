@@ -7,6 +7,7 @@ import { useState, type FormEvent } from 'react';
 import { loginUser } from '@/application/use-cases/login-user';
 import { AuthError } from '@/domain/errors/auth-error';
 import { establishSession } from '@/features/auth/establish-session';
+import { PasswordInput } from '@/features/auth/components/password-input';
 import { loginSchema } from '@/features/auth/schemas';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
@@ -62,9 +63,8 @@ export function LoginForm() {
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="password">Contraseña</Label>
-        <Input
+        <PasswordInput
           id="password"
-          type="password"
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
