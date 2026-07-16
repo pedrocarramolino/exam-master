@@ -1,5 +1,5 @@
-import Link from 'next/link';
-
+import { CatalogLinkCard } from '@/shared/components/catalog-link-card';
+import { PageHeader } from '@/shared/components/page-header';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
 
 const contentRepository = new DataConnectContentRepository();
@@ -14,19 +14,14 @@ export default async function SimulatorGroupsPage({
 
   return (
     <div className="mx-auto max-w-2xl p-4">
-      <Link href="/simulador" className="text-muted-foreground text-sm hover:underline">
-        ← Oposiciones
-      </Link>
-      <h1 className="mt-1 mb-6 text-xl font-semibold">Elige tu comunidad</h1>
+      <PageHeader title="Elige tu comunidad" backHref="/simulador" backLabel="Oposiciones" />
       <div className="flex flex-col gap-3">
         {groups.map((group) => (
-          <Link
+          <CatalogLinkCard
             key={group.id}
             href={`/simulador/grupos/${group.id}`}
-            className="hover:bg-muted rounded-lg border p-4"
-          >
-            <p className="font-medium">{group.name}</p>
-          </Link>
+            title={group.name}
+          />
         ))}
         {groups.length === 0 && (
           <p className="text-muted-foreground text-sm">

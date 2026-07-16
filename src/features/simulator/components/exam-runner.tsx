@@ -5,6 +5,9 @@ import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from
 import type { ExamForAttempt } from '@/domain/entities/attempt';
 import { finishAttemptAction, saveAnswerAction } from '@/features/simulator/actions';
 import { Button } from '@/shared/components/ui/button';
+import { cn } from '@/shared/lib/utils';
+
+const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 function formatTime(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / 60)
@@ -61,6 +64,8 @@ export function ExamRunner({
 
   const question = exam.questions[currentIndex];
   const answeredCount = Object.values(answers).filter((v) => v !== null && v !== undefined).length;
+  const progressPercent = Math.round((answeredCount / exam.questions.length) * 100);
+  const isLowTime = secondsLeft <= 60;
 
   async function selectOption(questionId: string, optionId: string) {
     setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
@@ -72,22 +77,35 @@ export function ExamRunner({
   if (!question) return null;
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-6 p-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold">{exam.title}</h1>
-        <span className="bg-muted rounded-md px-2.5 py-1 text-sm font-medium tabular-nums">
+    <div className="mx-auto flex max-w-2xl flex-col gap-5 p-4">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="truncate text-lg font-semibold">{exam.title}</h1>
+        <span
+          className={cn(
+            'shrink-0 rounded-md px-2.5 py-1 text-sm font-medium tabular-nums',
+            isLowTime ? 'bg-destructive/10 text-destructive' : 'bg-muted',
+          )}
+        >
           {formatTime(secondsLeft)}
         </span>
       </div>
 
-      <p className="text-muted-foreground text-sm">
-        Pregunta {currentIndex + 1} de {exam.questions.length} · {answeredCount} respondidas
-      </p>
+      <div className="flex flex-col gap-1.5">
+        <div className="bg-muted h-1.5 overflow-hidden rounded-full">
+          <div
+            className="bg-primary h-full rounded-full transition-all"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+        <p className="text-muted-foreground text-sm">
+          Pregunta {currentIndex + 1} de {exam.questions.length} · {answeredCount} respondidas
+        </p>
+      </div>
 
-      <div className="flex flex-col gap-4 rounded-lg border p-4">
+      <div className="flex flex-col gap-4 rounded-2xl border p-5">
         <p className="font-medium">{question.statement}</p>
         <div className="flex flex-col gap-2">
-          {question.options.map((option) => {
+          {question.options.map((option, index) => {
             const isSelected = answers[question.id] === option.id;
             return (
               <button
@@ -95,10 +113,21 @@ export function ExamRunner({
                 type="button"
                 aria-pressed={isSelected}
                 onClick={() => selectOption(question.id, option.id)}
-                className={`rounded-md border px-3 py-2 text-left text-sm transition-colors ${
-                  isSelected ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'
-                }`}
+                className={cn(
+                  'flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm transition-colors',
+                  isSelected ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted',
+                )}
               >
+                <span
+                  className={cn(
+                    'flex size-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium',
+                    isSelected
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border text-muted-foreground',
+                  )}
+                >
+                  {OPTION_LETTERS[index]}
+                </span>
                 {option.text}
               </button>
             );
@@ -117,13 +146,14 @@ export function ExamRunner({
             aria-label={`Pregunta ${index + 1}${answers[q.id] ? ' (respondida)' : ''}`}
             aria-current={index === currentIndex ? 'true' : undefined}
             onClick={() => setCurrentIndex(index)}
-            className={`size-8 rounded-md border text-xs font-medium ${
+            className={cn(
+              'size-8 rounded-md border text-xs font-medium',
               index === currentIndex
                 ? 'border-primary bg-primary text-primary-foreground'
                 : answers[q.id]
                   ? 'border-border bg-muted'
-                  : 'border-border'
-            }`}
+                  : 'border-border',
+            )}
           >
             {index + 1}
           </button>

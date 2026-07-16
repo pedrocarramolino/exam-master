@@ -1,3 +1,4 @@
+import { Clock, ListChecks } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 import { startAttemptAction } from '@/features/simulator/actions';
@@ -26,14 +27,24 @@ export default async function SimulatorExamDetailPage({
     <div className="mx-auto max-w-lg p-4">
       <Card>
         <CardHeader>
-          <CardTitle>{exam.title}</CardTitle>
-          <CardDescription>
-            {exam.durationMinutes} minutos · {exam.questions.length} preguntas
-          </CardDescription>
+          <CardTitle className="text-xl">{exam.title}</CardTitle>
+          <CardDescription>Simulacro cronometrado con corrección al finalizar</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col gap-6">
+          <div className="flex gap-6">
+            <div className="flex items-center gap-2">
+              <Clock className="text-muted-foreground size-4" />
+              <span className="text-sm">{exam.durationMinutes} minutos</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <ListChecks className="text-muted-foreground size-4" />
+              <span className="text-sm">{exam.questions.length} preguntas</span>
+            </div>
+          </div>
           <form action={startAttemptAction.bind(null, examId)}>
-            <Button type="submit">Empezar examen</Button>
+            <Button type="submit" size="lg" className="w-full">
+              Empezar examen
+            </Button>
           </form>
         </CardContent>
       </Card>

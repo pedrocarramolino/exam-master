@@ -1,5 +1,5 @@
-import Link from 'next/link';
-
+import { CatalogLinkCard } from '@/shared/components/catalog-link-card';
+import { PageHeader } from '@/shared/components/page-header';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
 
 const contentRepository = new DataConnectContentRepository();
@@ -14,17 +14,15 @@ export default async function SimulatorEditionsPage({
 
   return (
     <div className="mx-auto max-w-2xl p-4">
-      <h1 className="mb-6 text-xl font-semibold">Elige la convocatoria</h1>
+      <PageHeader title="Elige la convocatoria" />
       <div className="flex flex-col gap-3">
         {editions.map((edition) => (
-          <Link
+          <CatalogLinkCard
             key={edition.id}
             href={`/simulador/ediciones/${edition.id}`}
-            className="hover:bg-muted rounded-lg border p-4"
-          >
-            <p className="font-medium">{edition.label ?? `Convocatoria ${edition.year}`}</p>
-            <p className="text-muted-foreground text-sm">{edition.year}</p>
-          </Link>
+            title={edition.label ?? `Convocatoria ${edition.year}`}
+            subtitle={String(edition.year)}
+          />
         ))}
         {editions.length === 0 && (
           <p className="text-muted-foreground text-sm">

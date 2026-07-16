@@ -1,3 +1,4 @@
+import { CheckCircle2, Timer, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -44,42 +45,55 @@ export default async function AttemptResultPage({
   return (
     <div className="mx-auto max-w-lg p-4">
       <Card>
-        <CardHeader>
+        <CardHeader className="items-center text-center">
           <CardTitle>{attempt.examTitle}</CardTitle>
           <CardDescription>Resultado del examen</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-muted-foreground text-sm">Nota</p>
-              <p className="text-2xl font-semibold">{attempt.score?.toFixed(2) ?? '-'} / 10</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Porcentaje de aciertos</p>
-              <p className="text-2xl font-semibold">{percentage}%</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Correctas</p>
-              <p className="text-lg font-medium">{correctCount}</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Incorrectas</p>
-              <p className="text-lg font-medium">{incorrectCount}</p>
-            </div>
-            <div className="col-span-2">
-              <p className="text-muted-foreground text-sm">Tiempo empleado</p>
-              <p className="text-lg font-medium">
-                {attempt.timeSpentSeconds !== null ? formatDuration(attempt.timeSpentSeconds) : '-'}
-              </p>
+        <CardContent className="flex flex-col items-center gap-6">
+          <div
+            className="relative flex size-36 shrink-0 items-center justify-center rounded-full"
+            style={{
+              background: `conic-gradient(var(--primary) ${percentage}%, var(--muted) 0)`,
+            }}
+          >
+            <div className="bg-background absolute inset-2 flex flex-col items-center justify-center rounded-full">
+              <span className="text-3xl font-bold">{attempt.score?.toFixed(1) ?? '-'}</span>
+              <span className="text-muted-foreground text-xs">de 10 · {percentage}%</span>
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <Link href={`/simulador/intentos/${attemptId}/revision`} className={buttonVariants({})}>
+          <div className="grid w-full grid-cols-3 gap-3 text-center">
+            <div className="flex flex-col items-center gap-1 rounded-xl border p-3">
+              <CheckCircle2 className="size-5 text-green-600 dark:text-green-500" />
+              <span className="font-semibold">{correctCount}</span>
+              <span className="text-muted-foreground text-xs">Correctas</span>
+            </div>
+            <div className="flex flex-col items-center gap-1 rounded-xl border p-3">
+              <XCircle className="text-destructive size-5" />
+              <span className="font-semibold">{incorrectCount}</span>
+              <span className="text-muted-foreground text-xs">Incorrectas</span>
+            </div>
+            <div className="flex flex-col items-center gap-1 rounded-xl border p-3">
+              <Timer className="text-muted-foreground size-5" />
+              <span className="font-semibold">
+                {attempt.timeSpentSeconds !== null ? formatDuration(attempt.timeSpentSeconds) : '-'}
+              </span>
+              <span className="text-muted-foreground text-xs">Tiempo</span>
+            </div>
+          </div>
+
+          <div className="flex w-full gap-3">
+            <Link
+              href={`/simulador/intentos/${attemptId}/revision`}
+              className={buttonVariants({ className: 'flex-1' })}
+            >
               Revisar respuestas
             </Link>
-            <Link href="/simulador" className={buttonVariants({ variant: 'outline' })}>
-              Volver al simulador
+            <Link
+              href="/simulador"
+              className={buttonVariants({ variant: 'outline', className: 'flex-1' })}
+            >
+              Volver
             </Link>
           </div>
         </CardContent>
