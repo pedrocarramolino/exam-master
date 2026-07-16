@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
+import { requireAdmin } from '@/features/admin/require-admin';
 import type { ActionState } from '@/features/admin/actions/categories';
 
 const contentRepository = new DataConnectContentRepository();
@@ -22,6 +23,7 @@ export async function createGroupAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireAdmin();
   const parsed = groupSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
@@ -38,6 +40,7 @@ export async function updateGroupAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireAdmin();
   const parsed = groupSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
@@ -49,6 +52,7 @@ export async function updateGroupAction(
 }
 
 export async function deleteGroupAction(categoryId: string, groupId: string): Promise<void> {
+  await requireAdmin();
   await contentRepository.deleteGroup(groupId);
   revalidatePath(`/admin/categories/${categoryId}`);
 }

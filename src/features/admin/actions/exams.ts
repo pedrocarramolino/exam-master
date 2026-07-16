@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
+import { requireAdmin } from '@/features/admin/require-admin';
 import type { ActionState } from '@/features/admin/actions/categories';
 
 const contentRepository = new DataConnectContentRepository();
@@ -19,6 +20,7 @@ export async function createExamAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireAdmin();
   const parsed = examSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
@@ -40,6 +42,7 @@ export async function updateExamAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireAdmin();
   const parsed = examSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
@@ -55,6 +58,7 @@ export async function updateExamAction(
 }
 
 export async function deleteExamAction(editionId: string, examId: string): Promise<void> {
+  await requireAdmin();
   await contentRepository.deleteExam(examId);
   revalidatePath(`/admin/editions/${editionId}`);
 }

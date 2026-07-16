@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
+import { requireAdmin } from '@/features/admin/require-admin';
 
 const contentRepository = new DataConnectContentRepository();
 
@@ -25,6 +26,7 @@ export async function createCategoryAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireAdmin();
   const parsed = categorySchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
@@ -44,6 +46,7 @@ export async function updateCategoryAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireAdmin();
   const parsed = categorySchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
@@ -59,6 +62,7 @@ export async function updateCategoryAction(
 }
 
 export async function deleteCategoryAction(categoryId: string): Promise<void> {
+  await requireAdmin();
   await contentRepository.deleteCategory(categoryId);
   revalidatePath('/admin/categories');
 }

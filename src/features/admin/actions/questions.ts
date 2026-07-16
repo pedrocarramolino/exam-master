@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import type { AnswerOptionInput } from '@/domain/entities/content';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
+import { requireAdmin } from '@/features/admin/require-admin';
 import { importQuestionsFromCsv } from '@/application/use-cases/import-questions-from-csv';
 import type { ActionState } from '@/features/admin/actions/categories';
 
@@ -36,6 +37,7 @@ export async function createQuestionAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireAdmin();
   const parsed = questionSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
@@ -59,6 +61,7 @@ export async function updateQuestionAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireAdmin();
   const parsed = questionSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
@@ -76,6 +79,7 @@ export async function updateQuestionAction(
 }
 
 export async function deleteQuestionAction(examId: string, questionId: string): Promise<void> {
+  await requireAdmin();
   await contentRepository.deleteQuestion(questionId);
   revalidatePath(`/admin/exams/${examId}`);
 }
@@ -92,9 +96,14 @@ export async function importQuestionsAction(
   _prevState: ImportActionState,
   formData: FormData,
 ): Promise<ImportActionState> {
+  await requireAdmin();
   const file = formData.get('file');
   if (!(file instanceof File) || file.size === 0) {
     return { error: 'Selecciona un archivo CSV.' };
+  }
+  // 2 MB ≈ miles de preguntas; evita agotar memoria del servidor con un archivo enorme.
+  if (file.size > 2 * 1024 * 1024) {
+    return { error: 'El CSV no puede superar los 2 MB.' };
   }
 
   const csvText = await file.text();
