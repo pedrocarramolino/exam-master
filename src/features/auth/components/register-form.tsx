@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 
@@ -107,7 +108,15 @@ export function RegisterForm() {
           onChange={(e) => setAcceptTerms(e.target.checked)}
         />
         <span className="text-muted-foreground">
-          Acepto los términos de uso y la política de privacidad.
+          Acepto los{' '}
+          <Link href="/terminos" target="_blank" className="text-foreground underline">
+            términos de uso
+          </Link>{' '}
+          y la{' '}
+          <Link href="/privacidad" target="_blank" className="text-foreground underline">
+            política de privacidad
+          </Link>
+          .
         </span>
       </label>
       {error && <p className="text-destructive text-sm">{error}</p>}

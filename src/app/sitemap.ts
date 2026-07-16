@@ -11,6 +11,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/simulador`, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE_URL}/login`, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE_URL}/registro`, changeFrequency: 'yearly', priority: 0.5 },
+    { url: `${SITE_URL}/terminos`, changeFrequency: 'yearly', priority: 0.2 },
+    { url: `${SITE_URL}/privacidad`, changeFrequency: 'yearly', priority: 0.2 },
   ];
 
   // El catálogo público (oposiciones) también es indexable.
