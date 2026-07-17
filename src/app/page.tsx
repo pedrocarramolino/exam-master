@@ -1,11 +1,21 @@
-import { BarChart3, CheckCircle2, ClipboardCheck, Smartphone, Timer } from 'lucide-react';
+import {
+  BarChart3,
+  CheckCircle2,
+  ClipboardCheck,
+  ShieldCheck,
+  Smartphone,
+  Timer,
+} from 'lucide-react';
 import Link from 'next/link';
 
+import { DataConnectUserRoleRepository } from '@/infrastructure/firebase/user-role-repository';
 import { SiteFooter } from '@/shared/components/site-footer';
 import { ThemeToggle } from '@/shared/components/theme-toggle';
 import { Badge } from '@/shared/components/ui/badge';
 import { buttonVariants } from '@/shared/components/ui/button';
 import { getCurrentUser } from '@/infrastructure/firebase/session';
+
+const userRoleRepository = new DataConnectUserRoleRepository();
 
 const FEATURES = [
   {
@@ -36,6 +46,8 @@ const FEATURES = [
 
 export default async function HomePage() {
   const user = await getCurrentUser();
+  const role = user ? await userRoleRepository.getRole(user.id) : null;
+  const isAdmin = role === 'ADMIN';
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -87,6 +99,30 @@ export default async function HomePage() {
             </Link>
           </div>
         </section>
+
+        {isAdmin && (
+          <section className="mx-auto max-w-4xl px-4 pb-8">
+            <div className="border-primary/30 bg-primary/5 flex flex-col items-start gap-3 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-primary text-primary-foreground flex size-10 shrink-0 items-center justify-center rounded-xl">
+                  <ShieldCheck className="size-5" />
+                </div>
+                <div>
+                  <p className="font-medium">Panel de administración</p>
+                  <p className="text-muted-foreground text-sm">
+                    Gestiona oposiciones, exámenes y preguntas.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/admin/categories"
+                className={buttonVariants({ variant: 'outline', className: 'shrink-0' })}
+              >
+                Ir al panel admin
+              </Link>
+            </div>
+          </section>
+        )}
 
         <section className="mx-auto max-w-4xl px-4 pb-20">
           <div className="grid gap-4 sm:grid-cols-2">
