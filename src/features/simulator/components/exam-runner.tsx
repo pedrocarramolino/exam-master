@@ -51,6 +51,15 @@ export function ExamRunner({
   }, [attemptId]);
 
   useEffect(() => {
+    function handleBeforeUnload(event: BeforeUnloadEvent) {
+      if (finishedRef.current) return;
+      event.preventDefault();
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       const remaining = Math.max(0, (deadline - Date.now()) / 1000);
       setSecondsLeft(remaining);
@@ -67,12 +76,44 @@ export function ExamRunner({
   const progressPercent = Math.round((answeredCount / exam.questions.length) * 100);
   const isLowTime = secondsLeft <= 60;
 
-  async function selectOption(questionId: string, optionId: string) {
-    setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
-    setSavingQuestionId(questionId);
-    await saveAnswerAction(attemptId, questionId, optionId);
-    setSavingQuestionId((current) => (current === questionId ? null : current));
-  }
+  const selectOption = useCallback(
+    async (questionId: string, optionId: string) => {
+      setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
+      setSavingQuestionId(questionId);
+      await saveAnswerAction(attemptId, questionId, optionId);
+      setSavingQuestionId((current) => (current === questionId ? null : current));
+    },
+    [attemptId],
+  );
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        setCurrentIndex((i) => Math.min(exam.questions.length - 1, i + 1));
+        return;
+      }
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        setCurrentIndex((i) => Math.max(0, i - 1));
+        return;
+      }
+
+      const optionIndex = Number(event.key) - 1;
+      if (Number.isInteger(optionIndex) && optionIndex >= 0) {
+        const option = question?.options[optionIndex];
+        if (option) {
+          event.preventDefault();
+          void selectOption(question.id, option.id);
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [exam.questions.length, question, selectOption]);
 
   if (!question) return null;
 
@@ -136,6 +177,9 @@ export function ExamRunner({
         {savingQuestionId === question.id && (
           <p className="text-muted-foreground text-xs">Guardando...</p>
         )}
+        <p className="text-muted-foreground hidden text-xs sm:block">
+          Atajos: 1-4 para responder · ← → para navegar
+        </p>
       </div>
 
       <div className="flex flex-wrap gap-1.5" role="navigation" aria-label="Ir a pregunta">
