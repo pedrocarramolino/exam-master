@@ -1,5 +1,4 @@
-import { CatalogLinkCard } from '@/shared/components/catalog-link-card';
-import { EmptyState } from '@/shared/components/empty-state';
+import { CatalogSearchList } from '@/shared/components/catalog-search-list';
 import { PageHeader } from '@/shared/components/page-header';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
 
@@ -16,19 +15,16 @@ export default async function SimulatorExamsPage({
   return (
     <div className="mx-auto max-w-2xl p-4">
       <PageHeader title="Elige el examen" />
-      <div className="flex flex-col gap-3">
-        {exams.map((exam) => (
-          <CatalogLinkCard
-            key={exam.id}
-            href={`/simulador/examenes/${exam.id}`}
-            title={exam.title}
-            subtitle={`${exam.durationMinutes} minutos`}
-          />
-        ))}
-        {exams.length === 0 && (
-          <EmptyState message="Todavía no hay exámenes para esta convocatoria." />
-        )}
-      </div>
+      <CatalogSearchList
+        items={exams.map((exam) => ({
+          id: exam.id,
+          href: `/simulador/examenes/${exam.id}`,
+          title: exam.title,
+          subtitle: `${exam.durationMinutes} minutos`,
+        }))}
+        emptyMessage="Todavía no hay exámenes para esta convocatoria."
+        searchPlaceholder="Buscar examen..."
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { LogoutButton } from '@/features/auth/components/logout-button';
+import { ExportAttemptsButton } from '@/features/simulator/components/export-attempts-button';
 import { DataConnectAttemptRepository } from '@/infrastructure/firebase/attempt-repository';
 import {
   Card,
@@ -50,8 +51,11 @@ export default async function ProfilePage() {
       </Card>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex-row items-center justify-between">
           <CardTitle>Mis exámenes</CardTitle>
+          {attempts.some((a) => a.status === 'FINISHED') && (
+            <ExportAttemptsButton attempts={attempts} />
+          )}
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           {attempts.length === 0 && (

@@ -1,5 +1,4 @@
-import { CatalogLinkCard } from '@/shared/components/catalog-link-card';
-import { EmptyState } from '@/shared/components/empty-state';
+import { CatalogSearchList } from '@/shared/components/catalog-search-list';
 import { PageHeader } from '@/shared/components/page-header';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
 
@@ -13,17 +12,16 @@ export default async function SimulatorCategoriesPage() {
   return (
     <div className="mx-auto max-w-2xl p-4">
       <PageHeader title="Elige tu oposición" />
-      <div className="flex flex-col gap-3">
-        {categories.map((category) => (
-          <CatalogLinkCard
-            key={category.id}
-            href={`/simulador/categorias/${category.id}`}
-            title={category.name}
-            subtitle={category.description}
-          />
-        ))}
-        {categories.length === 0 && <EmptyState message="Todavía no hay oposiciones publicadas." />}
-      </div>
+      <CatalogSearchList
+        items={categories.map((category) => ({
+          id: category.id,
+          href: `/simulador/categorias/${category.id}`,
+          title: category.name,
+          subtitle: category.description,
+        }))}
+        emptyMessage="Todavía no hay oposiciones publicadas."
+        searchPlaceholder="Buscar oposición..."
+      />
     </div>
   );
 }
