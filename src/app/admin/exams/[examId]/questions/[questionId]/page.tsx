@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { QuestionForm } from '@/features/admin/components/question-form';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
 import { PageHeader } from '@/shared/components/page-header';
+import { Card, CardContent } from '@/shared/components/ui/card';
 
 const contentRepository = new DataConnectContentRepository();
 
@@ -28,7 +29,11 @@ export default async function AdminEditQuestionPage({
         backHref={`/admin/exams/${examId}?editionId=${editionId ?? ''}&categoryId=${categoryId ?? ''}`}
         backLabel="Preguntas"
       />
-      <QuestionForm examId={examId} topics={topics} question={question} />
+      <Card>
+        <CardContent>
+          <QuestionForm examId={examId} topics={topics} question={question} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

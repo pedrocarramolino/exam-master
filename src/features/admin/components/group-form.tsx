@@ -18,7 +18,7 @@ export function GroupForm({ categoryId, group }: { categoryId: string; group?: E
   const [state, formAction, isPending] = useActionState(action, initialState);
 
   return (
-    <form action={formAction} className="flex flex-col gap-3 rounded-lg border p-4">
+    <form action={formAction} className="flex flex-col gap-3">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="name">Nombre</Label>
         <Input id="name" name="name" defaultValue={group?.name} required />

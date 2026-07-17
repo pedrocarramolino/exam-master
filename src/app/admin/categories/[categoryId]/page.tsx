@@ -44,12 +44,16 @@ export default async function AdminCategoryPage({
         </Link>
       </div>
 
-      <details>
-        <summary className="cursor-pointer text-sm font-medium">Editar oposición</summary>
-        <div className="mt-3">
-          <CategoryForm category={category} />
-        </div>
-      </details>
+      <Card>
+        <CardContent>
+          <details>
+            <summary className="cursor-pointer text-sm font-medium">Editar oposición</summary>
+            <div className="mt-3">
+              <CategoryForm category={category} />
+            </div>
+          </details>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

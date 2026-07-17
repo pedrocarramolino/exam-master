@@ -14,7 +14,7 @@ export function CsvImportForm({ examId, categoryId }: { examId: string; category
   );
 
   return (
-    <form action={formAction} className="flex flex-col gap-3 rounded-lg border p-4">
+    <form action={formAction} className="flex flex-col gap-3">
       <p className="text-muted-foreground text-sm">
         CSV con cabecera:{' '}
         <code>
@@ -23,7 +23,13 @@ export function CsvImportForm({ examId, categoryId }: { examId: string; category
         .<code>correcta</code> es el número (1-4) de la respuesta correcta; <code>explicacion</code>{' '}
         y <code>dificultad</code> (EASY/MEDIUM/HARD) son opcionales.
       </p>
-      <input type="file" name="file" accept=".csv,text/csv" required />
+      <input
+        type="file"
+        name="file"
+        accept=".csv,text/csv"
+        required
+        className="file:bg-primary file:text-primary-foreground text-muted-foreground text-sm file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:px-3 file:py-1.5 file:text-sm file:font-medium"
+      />
       {state.error && <p className="text-destructive text-sm">{state.error}</p>}
       {state.created !== undefined && (
         <p className="text-sm">

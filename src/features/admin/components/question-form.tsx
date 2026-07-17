@@ -36,7 +36,7 @@ export function QuestionForm({
   const correctPosition = question?.options.find((o) => o.isCorrect)?.position ?? 1;
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 rounded-lg border p-4">
+    <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="statement">Enunciado</Label>
         <Textarea id="statement" name="statement" defaultValue={question?.statement} required />
@@ -76,7 +76,7 @@ export function QuestionForm({
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 text-sm font-medium">Respuestas (marca la correcta)</legend>
         {[1, 2, 3, 4].map((position) => (
-          <div key={position} className="flex items-center gap-2">
+          <div key={position} className="flex items-center gap-3">
             <input
               type="radio"
               name="correctPosition"
@@ -84,6 +84,7 @@ export function QuestionForm({
               defaultChecked={correctPosition === position}
               required
               aria-label={`Respuesta ${position} es la correcta`}
+              className="accent-primary size-4 shrink-0"
             />
             <Input
               name={`option${position}`}

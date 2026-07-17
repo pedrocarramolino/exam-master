@@ -17,7 +17,7 @@ export function TopicForm({ categoryId }: { categoryId: string }) {
   );
 
   return (
-    <form action={formAction} className="flex items-end gap-3 rounded-lg border p-4">
+    <form action={formAction} className="flex items-end gap-3">
       <div className="flex flex-1 flex-col gap-1.5">
         <Label htmlFor="name">Nuevo tema</Label>
         <Input id="name" name="name" required />
