@@ -5,6 +5,8 @@ import { CsvImportForm } from '@/features/admin/components/csv-import-form';
 import { DeleteButton } from '@/features/admin/components/delete-button';
 import { QuestionForm } from '@/features/admin/components/question-form';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
+import { PageHeader } from '@/shared/components/page-header';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import {
   Table,
   TableBody,
@@ -32,65 +34,71 @@ export default async function AdminExamPage({
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        {editionId && (
-          <Link
-            href={`/admin/editions/${editionId}`}
-            className="text-muted-foreground text-sm hover:underline"
-          >
-            ← Volver al examen
-          </Link>
-        )}
-        <h1 className="mt-1 text-xl font-semibold">Preguntas</h1>
-      </div>
+      <PageHeader
+        title="Preguntas"
+        backHref={editionId ? `/admin/editions/${editionId}` : undefined}
+        backLabel="Exámenes"
+      />
 
       {!categoryId && (
-        <p className="rounded-md bg-yellow-100 p-3 text-sm text-yellow-900">
+        <p className="rounded-lg bg-yellow-100 p-3 text-sm text-yellow-900 dark:bg-yellow-950 dark:text-yellow-100">
           Llega a esta página desde el listado de exámenes para poder asignar tema e importar CSV.
         </p>
       )}
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Enunciado</TableHead>
-            <TableHead>Dificultad</TableHead>
-            <TableHead className="text-right">Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {questions.map((question) => (
-            <TableRow key={question.id}>
-              <TableCell className="max-w-md truncate">{question.statement}</TableCell>
-              <TableCell>{question.difficulty}</TableCell>
-              <TableCell className="flex justify-end gap-2">
-                <Link
-                  href={`/admin/exams/${examId}/questions/${question.id}?editionId=${editionId ?? ''}&categoryId=${categoryId ?? ''}`}
-                  className="text-sm underline"
-                >
-                  Editar
-                </Link>
-                <DeleteButton
-                  action={deleteQuestionAction.bind(null, examId, question.id)}
-                  confirmMessage="¿Eliminar esta pregunta y sus respuestas?"
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Card>
+        <CardContent className="px-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">Enunciado</TableHead>
+                <TableHead>Dificultad</TableHead>
+                <TableHead className="pr-4 text-right">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {questions.map((question) => (
+                <TableRow key={question.id}>
+                  <TableCell className="max-w-md truncate pl-4">{question.statement}</TableCell>
+                  <TableCell>{question.difficulty}</TableCell>
+                  <TableCell className="flex justify-end gap-2 pr-4">
+                    <Link
+                      href={`/admin/exams/${examId}/questions/${question.id}?editionId=${editionId ?? ''}&categoryId=${categoryId ?? ''}`}
+                      className="text-sm underline"
+                    >
+                      Editar
+                    </Link>
+                    <DeleteButton
+                      action={deleteQuestionAction.bind(null, examId, question.id)}
+                      confirmMessage="¿Eliminar esta pregunta y sus respuestas?"
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
       {categoryId && (
         <>
-          <div>
-            <h2 className="mb-3 text-lg font-medium">Nueva pregunta</h2>
-            <QuestionForm examId={examId} topics={topics} />
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Nueva pregunta</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <QuestionForm examId={examId} topics={topics} />
+            </CardContent>
+          </Card>
 
-          <div>
-            <h2 className="mb-3 text-lg font-medium">Importar preguntas desde CSV</h2>
-            <CsvImportForm examId={examId} categoryId={categoryId} />
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Importar preguntas desde CSV</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CsvImportForm examId={examId} categoryId={categoryId} />
+            </CardContent>
+          </Card>
         </>
       )}
     </div>

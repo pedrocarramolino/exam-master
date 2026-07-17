@@ -1,9 +1,9 @@
-import Link from 'next/link';
-
 import { deleteTopicAction } from '@/features/admin/actions/topics';
 import { DeleteButton } from '@/features/admin/components/delete-button';
 import { TopicForm } from '@/features/admin/components/topic-form';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
+import { PageHeader } from '@/shared/components/page-header';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import {
   Table,
   TableBody,
@@ -25,39 +25,46 @@ export default async function AdminTopicsPage({
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        <Link
-          href={`/admin/categories/${categoryId}`}
-          className="text-muted-foreground text-sm hover:underline"
-        >
-          ← Volver a la oposición
-        </Link>
-        <h1 className="mt-1 text-xl font-semibold">Temas</h1>
-      </div>
+      <PageHeader
+        title="Temas"
+        backHref={`/admin/categories/${categoryId}`}
+        backLabel="Oposición"
+      />
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nombre</TableHead>
-            <TableHead className="text-right">Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {topics.map((topic) => (
-            <TableRow key={topic.id}>
-              <TableCell>{topic.name}</TableCell>
-              <TableCell className="flex justify-end gap-2">
-                <DeleteButton
-                  action={deleteTopicAction.bind(null, categoryId, topic.id)}
-                  confirmMessage={`¿Eliminar el tema "${topic.name}"?`}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Card>
+        <CardContent className="px-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">Nombre</TableHead>
+                <TableHead className="pr-4 text-right">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {topics.map((topic) => (
+                <TableRow key={topic.id}>
+                  <TableCell className="pl-4">{topic.name}</TableCell>
+                  <TableCell className="flex justify-end gap-2 pr-4">
+                    <DeleteButton
+                      action={deleteTopicAction.bind(null, categoryId, topic.id)}
+                      confirmMessage={`¿Eliminar el tema "${topic.name}"?`}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
-      <TopicForm categoryId={categoryId} />
+      <Card>
+        <CardHeader>
+          <CardTitle>Nuevo tema</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TopicForm categoryId={categoryId} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

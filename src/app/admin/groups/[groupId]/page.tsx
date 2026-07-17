@@ -4,6 +4,8 @@ import { deleteEditionAction } from '@/features/admin/actions/editions';
 import { DeleteButton } from '@/features/admin/components/delete-button';
 import { EditionForm } from '@/features/admin/components/edition-form';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
+import { PageHeader } from '@/shared/components/page-header';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import {
   Table,
   TableBody,
@@ -28,50 +30,55 @@ export default async function AdminGroupPage({
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        {categoryId && (
-          <Link
-            href={`/admin/categories/${categoryId}`}
-            className="text-muted-foreground text-sm hover:underline"
-          >
-            ← Volver a la oposición
-          </Link>
-        )}
-        <h1 className="mt-1 text-xl font-semibold">Convocatorias</h1>
-      </div>
+      <PageHeader
+        title="Convocatorias"
+        backHref={categoryId ? `/admin/categories/${categoryId}` : undefined}
+        backLabel="Oposición"
+      />
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Año</TableHead>
-            <TableHead>Etiqueta</TableHead>
-            <TableHead className="text-right">Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {editions.map((edition) => (
-            <TableRow key={edition.id}>
-              <TableCell>
-                <Link
-                  href={`/admin/editions/${edition.id}?groupId=${groupId}&categoryId=${categoryId ?? ''}`}
-                  className="hover:underline"
-                >
-                  {edition.year}
-                </Link>
-              </TableCell>
-              <TableCell>{edition.label}</TableCell>
-              <TableCell className="flex justify-end gap-2">
-                <DeleteButton
-                  action={deleteEditionAction.bind(null, groupId, edition.id)}
-                  confirmMessage={`¿Eliminar la convocatoria de ${edition.year}? Esto falla si aún tiene exámenes.`}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Card>
+        <CardContent className="px-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-4">Año</TableHead>
+                <TableHead>Etiqueta</TableHead>
+                <TableHead className="pr-4 text-right">Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {editions.map((edition) => (
+                <TableRow key={edition.id}>
+                  <TableCell className="pl-4">
+                    <Link
+                      href={`/admin/editions/${edition.id}?groupId=${groupId}&categoryId=${categoryId ?? ''}`}
+                      className="hover:underline"
+                    >
+                      {edition.year}
+                    </Link>
+                  </TableCell>
+                  <TableCell>{edition.label}</TableCell>
+                  <TableCell className="flex justify-end gap-2 pr-4">
+                    <DeleteButton
+                      action={deleteEditionAction.bind(null, groupId, edition.id)}
+                      confirmMessage={`¿Eliminar la convocatoria de ${edition.year}? Esto falla si aún tiene exámenes.`}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
-      <EditionForm groupId={groupId} />
+      <Card>
+        <CardHeader>
+          <CardTitle>Nueva convocatoria</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EditionForm groupId={groupId} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
