@@ -1,5 +1,6 @@
 'use client';
 
+import { ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -12,7 +13,7 @@ const NAV_LINKS = [
   { href: '/perfil', label: 'Perfil' },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -44,6 +45,15 @@ export function SiteHeader() {
             );
           })}
         </nav>
+        {isAdmin && (
+          <Link
+            href="/admin/categories"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
+          >
+            <ShieldCheck className="size-4" />
+            Admin
+          </Link>
+        )}
         <ThemeToggle />
       </div>
     </header>
