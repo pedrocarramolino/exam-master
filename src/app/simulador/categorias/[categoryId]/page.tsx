@@ -1,4 +1,5 @@
 import { CatalogLinkCard } from '@/shared/components/catalog-link-card';
+import { EmptyState } from '@/shared/components/empty-state';
 import { PageHeader } from '@/shared/components/page-header';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
 
@@ -24,9 +25,7 @@ export default async function SimulatorGroupsPage({
           />
         ))}
         {groups.length === 0 && (
-          <p className="text-muted-foreground text-sm">
-            Todavía no hay comunidades para esta oposición.
-          </p>
+          <EmptyState message="Todavía no hay comunidades para esta oposición." />
         )}
       </div>
     </div>

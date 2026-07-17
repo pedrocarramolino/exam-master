@@ -1,4 +1,5 @@
 import { CatalogLinkCard } from '@/shared/components/catalog-link-card';
+import { EmptyState } from '@/shared/components/empty-state';
 import { PageHeader } from '@/shared/components/page-header';
 import { DataConnectContentRepository } from '@/infrastructure/firebase/content-repository';
 
@@ -25,9 +26,7 @@ export default async function SimulatorEditionsPage({
           />
         ))}
         {editions.length === 0 && (
-          <p className="text-muted-foreground text-sm">
-            Todavía no hay convocatorias para esta comunidad.
-          </p>
+          <EmptyState message="Todavía no hay convocatorias para esta comunidad." />
         )}
       </div>
     </div>
