@@ -146,7 +146,7 @@ export function RegisterForm() {
           </p>
         ) : (
           <p id="password-hint" className="text-muted-foreground text-xs">
-            Mínimo 6 caracteres, con letras, números y un carácter especial.
+            Mínimo 6 caracteres, con una mayúscula, un número y un carácter especial.
           </p>
         )}
       </div>

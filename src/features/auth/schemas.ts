@@ -9,6 +9,7 @@ export const passwordSchema = z
   .string()
   .min(6, 'La contraseña debe tener al menos 6 caracteres.')
   .regex(/[a-zA-Z]/, 'La contraseña debe incluir al menos una letra.')
+  .regex(/[A-Z]/, 'La contraseña debe incluir al menos una mayúscula.')
   .regex(/[0-9]/, 'La contraseña debe incluir al menos un número.')
   .regex(/[^a-zA-Z0-9]/, 'La contraseña debe incluir al menos un carácter especial.');
 
