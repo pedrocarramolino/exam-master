@@ -1,3 +1,4 @@
+import { Award, CheckCircle2, Clock, ListChecks, TrendingDown, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -5,6 +6,7 @@ import { computeUserStatistics } from '@/application/use-cases/compute-user-stat
 import { DataConnectAttemptRepository } from '@/infrastructure/firebase/attempt-repository';
 import { DataConnectStatisticsRepository } from '@/infrastructure/firebase/statistics-repository';
 import { getCurrentUser } from '@/infrastructure/firebase/session';
+import { PageHeader } from '@/shared/components/page-header';
 import {
   Card,
   CardContent,
@@ -15,6 +17,15 @@ import {
 
 const attemptRepository = new DataConnectAttemptRepository();
 const statisticsRepository = new DataConnectStatisticsRepository();
+
+const STAT_ICONS = {
+  totalExams: ListChecks,
+  averageScore: Award,
+  correctPercentage: CheckCircle2,
+  bestScore: TrendingUp,
+  worstScore: TrendingDown,
+  averageTimeSeconds: Clock,
+} as const;
 
 export const metadata = { title: 'Mis estadísticas' };
 
@@ -47,54 +58,38 @@ export default async function StatisticsPage() {
     );
   }
 
+  const statCards = [
+    { key: 'totalExams', label: 'Exámenes realizados', value: stats.totalExams },
+    { key: 'averageScore', label: 'Nota media', value: stats.averageScore?.toFixed(2) },
+    { key: 'correctPercentage', label: '% de aciertos', value: `${stats.correctPercentage}%` },
+    { key: 'bestScore', label: 'Mejor nota', value: stats.bestScore?.toFixed(2) },
+    { key: 'worstScore', label: 'Peor nota', value: stats.worstScore?.toFixed(2) },
+    {
+      key: 'averageTimeSeconds',
+      label: 'Tiempo medio',
+      value: stats.averageTimeSeconds !== null ? formatMinutes(stats.averageTimeSeconds) : '-',
+    },
+  ] as const;
+
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6 p-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Mis estadísticas</h1>
-        <Link href="/perfil" className="text-muted-foreground text-sm hover:underline">
-          Volver al perfil
-        </Link>
-      </div>
+      <PageHeader title="Mis estadísticas" backHref="/perfil" backLabel="Perfil" />
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Exámenes realizados</CardDescription>
-            <CardTitle className="text-2xl">{stats.totalExams}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Nota media</CardDescription>
-            <CardTitle className="text-2xl">{stats.averageScore?.toFixed(2)}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>% de aciertos</CardDescription>
-            <CardTitle className="text-2xl">{stats.correctPercentage}%</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Mejor nota</CardDescription>
-            <CardTitle className="text-2xl">{stats.bestScore?.toFixed(2)}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Peor nota</CardDescription>
-            <CardTitle className="text-2xl">{stats.worstScore?.toFixed(2)}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Tiempo medio</CardDescription>
-            <CardTitle className="text-2xl">
-              {stats.averageTimeSeconds !== null ? formatMinutes(stats.averageTimeSeconds) : '-'}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+        {statCards.map(({ key, label, value }) => {
+          const Icon = STAT_ICONS[key];
+          return (
+            <Card key={key}>
+              <CardHeader className="gap-2 pb-2">
+                <div className="bg-accent text-accent-foreground flex size-8 items-center justify-center rounded-lg">
+                  <Icon className="size-4" />
+                </div>
+                <CardDescription>{label}</CardDescription>
+                <CardTitle className="text-2xl">{value}</CardTitle>
+              </CardHeader>
+            </Card>
+          );
+        })}
       </div>
 
       <Card>

@@ -1,3 +1,4 @@
+import { ChevronRight, CircleDot, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -23,15 +24,21 @@ export default async function ProfilePage() {
   if (!user) redirect('/login');
 
   const attempts = await attemptRepository.getMyAttempts(user.id);
+  const initial = (user.displayName ?? user.email ?? '?').charAt(0).toUpperCase();
 
   return (
     <div className="mx-auto flex max-w-md flex-col gap-6 p-4">
       <Card>
-        <CardHeader>
-          <CardTitle>{user.displayName ?? 'Tu perfil'}</CardTitle>
-          <CardDescription>{user.email}</CardDescription>
+        <CardHeader className="flex-row items-center gap-4">
+          <span className="bg-primary text-primary-foreground flex size-12 shrink-0 items-center justify-center rounded-full text-lg font-semibold">
+            {initial}
+          </span>
+          <div className="flex flex-col">
+            <CardTitle>{user.displayName ?? 'Tu perfil'}</CardTitle>
+            <CardDescription>{user.email}</CardDescription>
+          </div>
         </CardHeader>
-        <CardContent className="flex gap-3">
+        <CardContent className="flex flex-wrap gap-3">
           <Link href="/simulador" className={buttonVariants({})}>
             Practicar
           </Link>
@@ -50,22 +57,33 @@ export default async function ProfilePage() {
           {attempts.length === 0 && (
             <p className="text-muted-foreground text-sm">Todavía no has hecho ningún examen.</p>
           )}
-          {attempts.map((attempt) => (
-            <Link
-              key={attempt.id}
-              href={
-                attempt.status === 'IN_PROGRESS'
-                  ? `/simulador/intentos/${attempt.id}`
-                  : `/simulador/intentos/${attempt.id}/resultado`
-              }
-              className="hover:bg-muted flex items-center justify-between rounded-md border px-3 py-2 text-sm"
-            >
-              <span>{attempt.examTitle}</span>
-              <span className="text-muted-foreground">
-                {attempt.status === 'IN_PROGRESS' ? 'En curso' : `${attempt.score?.toFixed(1)}/10`}
-              </span>
-            </Link>
-          ))}
+          {attempts.map((attempt) => {
+            const inProgress = attempt.status === 'IN_PROGRESS';
+            return (
+              <Link
+                key={attempt.id}
+                href={
+                  inProgress
+                    ? `/simulador/intentos/${attempt.id}`
+                    : `/simulador/intentos/${attempt.id}/resultado`
+                }
+                className="group hover:border-primary/40 hover:bg-accent/50 flex items-center gap-3 rounded-xl border p-3 text-sm transition-colors"
+              >
+                <span className="bg-accent text-accent-foreground flex size-8 shrink-0 items-center justify-center rounded-lg">
+                  {inProgress ? <CircleDot className="size-4" /> : <FileText className="size-4" />}
+                </span>
+                <span className="min-w-0 flex-1 truncate">{attempt.examTitle}</span>
+                <span
+                  className={
+                    inProgress ? 'text-primary font-medium' : 'text-muted-foreground font-medium'
+                  }
+                >
+                  {inProgress ? 'En curso' : `${attempt.score?.toFixed(1)}/10`}
+                </span>
+                <ChevronRight className="text-muted-foreground group-hover:text-primary size-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            );
+          })}
         </CardContent>
       </Card>
     </div>

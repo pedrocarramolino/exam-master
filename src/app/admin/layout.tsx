@@ -1,8 +1,10 @@
+import { ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { DataConnectUserRoleRepository } from '@/infrastructure/firebase/user-role-repository';
 import { getCurrentUser } from '@/infrastructure/firebase/session';
+import { Badge } from '@/shared/components/ui/badge';
 
 const userRoleRepository = new DataConnectUserRoleRepository();
 
@@ -19,9 +21,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="bg-muted/30 min-h-screen">
       <header className="bg-background border-b px-6 py-4">
         <nav className="mx-auto flex max-w-5xl items-center gap-4 text-sm">
-          <Link href="/admin/categories" className="font-semibold">
+          <Link href="/admin/categories" className="flex items-center gap-2 font-semibold">
+            <span className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-lg text-sm font-bold">
+              E
+            </span>
             ExamMaster Admin
           </Link>
+          <Badge variant="secondary" className="gap-1">
+            <ShieldCheck className="size-3.5" />
+            Admin
+          </Badge>
           <Link href="/admin/categories" className="text-muted-foreground hover:text-foreground">
             Oposiciones
           </Link>
