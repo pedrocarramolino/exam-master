@@ -5,34 +5,23 @@
  *  - Precache mínimo: la página /offline y los iconos.
  *  - Estáticos de Next (/_next/static, iconos, fuentes): cache-first (son inmutables,
  *    llevan hash en la URL).
- *  - Navegaciones (HTML) públicas: network-first con fallback a /offline si no hay conexión.
- *  - Navegaciones a rutas privadas (perfil, admin, estadísticas, intentos de examen):
- *    NUNCA se cachean ni se sirven desde caché. Cache Storage no está atado a la cookie
- *    de sesión: si se cacheara, un segundo usuario del mismo dispositivo (ordenador
- *    compartido) podría ver esas páginas ya cerrada la sesión, sin pasar por el
- *    middleware ni por la comprobación de servidor. Se van directas a /offline si falla la red.
+ *  - Navegaciones (HTML): SIEMPRE solo red, con fallback a /offline si falla. NUNCA se
+ *    cachean ni se sirven desde caché — ni siquiera las públicas. Next.js las sirve con
+ *    streaming (Suspense/loading.tsx: la respuesta llega en varios chunks a lo largo del
+ *    tiempo, no de golpe). cache.put(response.clone()) hace tee() del stream para leerlo
+ *    dos veces a la vez; en la práctica eso deja la página colgada mostrando el skeleton
+ *    de loading.tsx para siempre en vez de completar el streaming (bug real, reproducido:
+ *    v2 rompía /simulador y cualquier ruta con loading.tsx). No merece la pena cachear
+ *    HTML para ganar soporte offline si el coste es que la app pueda quedarse colgada
+ *    con conexión normal.
  *  - NUNCA se cachean: peticiones no-GET, /api/*, ni nada con cookies de sesión en juego.
  *  - Actualizaciones automáticas: skipWaiting + clients.claim y limpieza de cachés viejas
- *    (subir VERSION purga también cualquier página privada cacheada por una versión anterior).
+ *    (subir VERSION purga cualquier página cacheada por una versión anterior, incluida
+ *    cualquier copia ya atascada de v2).
  */
-const VERSION = "v2";
+const VERSION = "v3";
 const STATIC_CACHE = `exammaster-static-${VERSION}`;
-const PAGES_CACHE = `exammaster-pages-${VERSION}`;
 const OFFLINE_URL = "/offline";
-
-// Mismas rutas que exigen sesión en proxy.ts: su HTML nunca debe acabar en Cache Storage.
-const PRIVATE_PATH_PREFIXES = [
-  "/perfil",
-  "/admin",
-  "/estadisticas",
-  "/simulador/intentos",
-];
-
-function isPrivatePath(pathname) {
-  return PRIVATE_PATH_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  );
-}
 
 const PRECACHE_URLS = [
   OFFLINE_URL,
@@ -94,37 +83,14 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Navegaciones a rutas privadas: nunca se cachean ni se sirven desde caché.
-  // Solo network, con /offline como fallback si falla (nunca una copia guardada de HTML privado).
-  if (request.mode === "navigate" && isPrivatePath(url.pathname)) {
+  // Navegaciones (cualquier ruta, pública o privada): solo red, sin caché de por medio,
+  // para no tocar el stream de la respuesta. Fallback a /offline solo si la red falla.
+  if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(async () => {
         const offline = await caches.match(OFFLINE_URL);
         return offline ?? Response.error();
       }),
-    );
-    return;
-  }
-
-  // Navegaciones públicas: network-first, fallback a la última copia o a /offline.
-  if (request.mode === "navigate") {
-    event.respondWith(
-      (async () => {
-        try {
-          const response = await fetch(request);
-          if (response.ok) {
-            const cache = await caches.open(PAGES_CACHE);
-            cache.put(request, response.clone());
-          }
-          return response;
-        } catch {
-          const cache = await caches.open(PAGES_CACHE);
-          const cached = await cache.match(request);
-          if (cached) return cached;
-          const offline = await caches.match(OFFLINE_URL);
-          return offline ?? Response.error();
-        }
-      })(),
     );
   }
 });
