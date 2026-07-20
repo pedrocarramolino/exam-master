@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { LogoutButton } from '@/features/auth/components/logout-button';
 import { ExportAttemptsButton } from '@/features/simulator/components/export-attempts-button';
 import { DataConnectAttemptRepository } from '@/infrastructure/firebase/attempt-repository';
+import { EmptyState } from '@/shared/components/empty-state';
 import {
   Card,
   CardContent,
@@ -14,10 +15,16 @@ import {
 } from '@/shared/components/ui/card';
 import { buttonVariants } from '@/shared/components/ui/button';
 import { getCurrentUser } from '@/infrastructure/firebase/session';
+import { SCORE_TIER_TEXT_CLASS, scoreTier } from '@/shared/lib/score-tier';
+import { cn } from '@/shared/lib/utils';
 
 const attemptRepository = new DataConnectAttemptRepository();
 
 export const metadata = { title: 'Mi perfil' };
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+}
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -59,7 +66,10 @@ export default async function ProfilePage() {
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           {attempts.length === 0 && (
-            <p className="text-muted-foreground text-sm">Todavía no has hecho ningún examen.</p>
+            <EmptyState
+              icon={FileText}
+              message="Todavía no has hecho ningún examen. Elige una oposición para empezar tu primer simulacro."
+            />
           )}
           {attempts.map((attempt) => {
             const inProgress = attempt.status === 'IN_PROGRESS';
@@ -76,11 +86,23 @@ export default async function ProfilePage() {
                 <span className="bg-accent text-accent-foreground flex size-8 shrink-0 items-center justify-center rounded-lg">
                   {inProgress ? <CircleDot className="size-4" /> : <FileText className="size-4" />}
                 </span>
-                <span className="min-w-0 flex-1 truncate">{attempt.examTitle}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate">{attempt.examTitle}</p>
+                  {attempt.finishedAt && (
+                    <p className="text-muted-foreground text-xs">
+                      {formatDate(attempt.finishedAt)}
+                    </p>
+                  )}
+                </div>
                 <span
-                  className={
-                    inProgress ? 'text-primary font-medium' : 'text-muted-foreground font-medium'
-                  }
+                  className={cn(
+                    'font-medium',
+                    inProgress
+                      ? 'text-primary'
+                      : attempt.score !== null
+                        ? SCORE_TIER_TEXT_CLASS[scoreTier(attempt.score)]
+                        : 'text-muted-foreground',
+                  )}
                 >
                   {inProgress ? 'En curso' : `${attempt.score?.toFixed(1)}/10`}
                 </span>

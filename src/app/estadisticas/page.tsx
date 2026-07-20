@@ -23,19 +23,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
+import { SCORE_TIER_BG_CLASS, scoreTier } from '@/shared/lib/score-tier';
 import { cn } from '@/shared/lib/utils';
-
-function scoreTier(score: number): 'good' | 'mid' | 'low' {
-  if (score >= 7) return 'good';
-  if (score >= 5) return 'mid';
-  return 'low';
-}
-
-const TIER_BAR_CLASS: Record<ReturnType<typeof scoreTier>, string> = {
-  good: 'bg-green-600 dark:bg-green-500',
-  mid: 'bg-amber-500',
-  low: 'bg-destructive',
-};
 
 const attemptRepository = new DataConnectAttemptRepository();
 const statisticsRepository = new DataConnectStatisticsRepository();
@@ -141,7 +130,7 @@ export default async function StatisticsPage() {
                 key={point.attemptId}
                 className={cn(
                   'group relative flex-1 rounded-t opacity-80 transition-opacity hover:opacity-100',
-                  TIER_BAR_CLASS[scoreTier(point.score)],
+                  SCORE_TIER_BG_CLASS[scoreTier(point.score)],
                 )}
                 style={{ height: `${Math.max(4, (point.score / 10) * 100)}%` }}
                 title={`${point.score.toFixed(2)} — ${new Date(point.finishedAt).toLocaleDateString('es-ES')}`}
@@ -168,7 +157,7 @@ export default async function StatisticsPage() {
                 <div
                   className={cn(
                     'h-full rounded-full transition-all',
-                    TIER_BAR_CLASS[scoreTier(topic.correctPercentage / 10)],
+                    SCORE_TIER_BG_CLASS[scoreTier(topic.correctPercentage / 10)],
                   )}
                   style={{ width: `${topic.correctPercentage}%` }}
                 />
