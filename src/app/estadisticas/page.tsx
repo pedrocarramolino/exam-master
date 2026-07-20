@@ -1,4 +1,12 @@
-import { Award, CheckCircle2, Clock, ListChecks, TrendingDown, TrendingUp } from 'lucide-react';
+import {
+  Award,
+  BarChart3,
+  CheckCircle2,
+  Clock,
+  ListChecks,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -6,6 +14,7 @@ import { computeUserStatistics } from '@/application/use-cases/compute-user-stat
 import { DataConnectAttemptRepository } from '@/infrastructure/firebase/attempt-repository';
 import { DataConnectStatisticsRepository } from '@/infrastructure/firebase/statistics-repository';
 import { getCurrentUser } from '@/infrastructure/firebase/session';
+import { EmptyState } from '@/shared/components/empty-state';
 import { PageHeader } from '@/shared/components/page-header';
 import {
   Card,
@@ -14,6 +23,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
+import { cn } from '@/shared/lib/utils';
+
+function scoreTier(score: number): 'good' | 'mid' | 'low' {
+  if (score >= 7) return 'good';
+  if (score >= 5) return 'mid';
+  return 'low';
+}
+
+const TIER_BAR_CLASS: Record<ReturnType<typeof scoreTier>, string> = {
+  good: 'bg-green-600 dark:bg-green-500',
+  mid: 'bg-amber-500',
+  low: 'bg-destructive',
+};
 
 const attemptRepository = new DataConnectAttemptRepository();
 const statisticsRepository = new DataConnectStatisticsRepository();
@@ -46,14 +68,17 @@ export default async function StatisticsPage() {
   if (stats.totalExams === 0) {
     return (
       <div className="mx-auto max-w-2xl p-4">
-        <h1 className="mb-4 text-xl font-semibold">Mis estadísticas</h1>
-        <p className="text-muted-foreground text-sm">
-          Todavía no has terminado ningún examen.{' '}
-          <Link href="/simulador" className="text-foreground underline">
-            Haz tu primer simulacro
-          </Link>{' '}
-          para empezar a ver tu progreso.
-        </p>
+        <PageHeader title="Mis estadísticas" backHref="/perfil" backLabel="Perfil" />
+        <EmptyState
+          icon={BarChart3}
+          message="Todavía no has terminado ningún examen. Haz tu primer simulacro para empezar a ver tu progreso."
+        />
+        <Link
+          href="/simulador"
+          className="text-foreground mt-3 inline-block text-center text-sm underline"
+        >
+          Ir al simulador
+        </Link>
       </div>
     );
   }
@@ -78,10 +103,18 @@ export default async function StatisticsPage() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {statCards.map(({ key, label, value }) => {
           const Icon = STAT_ICONS[key];
+          const badgeClass =
+            key === 'bestScore'
+              ? 'bg-green-600/10 text-green-600 dark:text-green-500'
+              : key === 'worstScore'
+                ? 'bg-destructive/10 text-destructive'
+                : 'bg-accent text-accent-foreground';
           return (
             <Card key={key}>
               <CardHeader className="gap-2 pb-2">
-                <div className="bg-accent text-accent-foreground flex size-8 items-center justify-center rounded-lg">
+                <div
+                  className={cn('flex size-8 items-center justify-center rounded-lg', badgeClass)}
+                >
                   <Icon className="size-4" />
                 </div>
                 <CardDescription>{label}</CardDescription>
@@ -98,11 +131,18 @@ export default async function StatisticsPage() {
           <CardDescription>Nota de cada examen, del más antiguo al más reciente</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex h-32 items-end gap-1.5">
+          <div className="relative flex h-32 items-end gap-1.5">
+            <div
+              className="border-muted-foreground/30 pointer-events-none absolute inset-x-0 border-t border-dashed"
+              style={{ bottom: '50%' }}
+            />
             {stats.evolution.map((point) => (
               <div
                 key={point.attemptId}
-                className="group bg-primary/70 hover:bg-primary relative flex-1 rounded-t transition-colors"
+                className={cn(
+                  'group relative flex-1 rounded-t opacity-80 transition-opacity hover:opacity-100',
+                  TIER_BAR_CLASS[scoreTier(point.score)],
+                )}
                 style={{ height: `${Math.max(4, (point.score / 10) * 100)}%` }}
                 title={`${point.score.toFixed(2)} — ${new Date(point.finishedAt).toLocaleDateString('es-ES')}`}
               />
@@ -126,7 +166,10 @@ export default async function StatisticsPage() {
               </div>
               <div className="bg-muted h-2 overflow-hidden rounded-full">
                 <div
-                  className="bg-primary h-full rounded-full"
+                  className={cn(
+                    'h-full rounded-full transition-all',
+                    TIER_BAR_CLASS[scoreTier(topic.correctPercentage / 10)],
+                  )}
                   style={{ width: `${topic.correctPercentage}%` }}
                 />
               </div>
