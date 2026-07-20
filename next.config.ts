@@ -1,6 +1,8 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // No revelar el framework/versión vía la cabecera X-Powered-By.
+  poweredByHeader: false,
   // firebase-admin (vía jwks-rsa/jose) no empaqueta bien con el bundler de servidor:
   // se carga como módulo nativo de Node en vez de bundlearse.
   serverExternalPackages: ['firebase-admin'],

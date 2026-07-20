@@ -12,7 +12,11 @@ export async function protectRoute(request: NextRequest): Promise<NextResponse> 
 
   if (sessionCookie) {
     try {
-      await firebaseAdminAuth.verifySessionCookie(sessionCookie);
+      // checkRevoked=true: sin esto, una sesión cerrada (revokeRefreshTokens en logout)
+      // seguiría pasando el middleware hasta que expirase la cookie (14 días), igual que
+      // getCurrentUser() en session.ts. Las páginas ya vuelven a comprobarlo, pero el
+      // middleware no debe ser el eslabón débil de esa cadena.
+      await firebaseAdminAuth.verifySessionCookie(sessionCookie, true);
       return NextResponse.next();
     } catch {
       // Cookie ausente, caducada o revocada: cae al redirect de abajo.

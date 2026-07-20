@@ -5,11 +5,20 @@ import { Download } from 'lucide-react';
 import type { ExamAttemptSummary } from '@/domain/entities/attempt';
 import { Button } from '@/shared/components/ui/button';
 
+// Antepone un apóstrofo si el valor empieza por un carácter que Excel/Sheets
+// interpretaría como el inicio de una fórmula (=, +, -, @, tab, salto de línea),
+// para que un examTitle malicioso no pueda ejecutar código al abrir el CSV
+// (CSV/Excel formula injection, CWE-1236).
+function neutralizeFormula(value: string): string {
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+}
+
 function toCsvValue(value: string): string {
-  if (/[",\n]/.test(value)) {
-    return `"${value.replace(/"/g, '""')}"`;
+  const safe = neutralizeFormula(value);
+  if (/[",\n]/.test(safe)) {
+    return `"${safe.replace(/"/g, '""')}"`;
   }
-  return value;
+  return safe;
 }
 
 function formatDuration(seconds: number | null): string {
