@@ -52,12 +52,18 @@ export default async function HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
-        <div className="mx-auto flex h-14 max-w-4xl items-center gap-2 px-4">
-          <Link href="/" className="mr-auto flex items-center gap-2 font-semibold">
+        <div className="mx-auto flex h-14 max-w-4xl items-center gap-1 px-3 sm:gap-2 sm:px-4">
+          <Link
+            href="/"
+            aria-label="ExamMaster"
+            className="mr-auto flex items-center gap-2 font-semibold"
+          >
             <span className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-lg text-sm font-bold">
               E
             </span>
-            ExamMaster
+            <span className="hidden sm:inline" aria-hidden="true">
+              ExamMaster
+            </span>
           </Link>
           {user ? (
             <Link href="/perfil" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
