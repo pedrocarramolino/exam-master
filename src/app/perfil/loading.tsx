@@ -6,7 +6,7 @@ export default function Loading() {
     <div className="mx-auto flex max-w-md flex-col gap-6 p-4">
       <Card>
         <CardHeader className="flex-row items-center gap-4">
-          <Skeleton className="size-12 shrink-0 rounded-full" />
+          <Skeleton className="size-14 shrink-0 rounded-full" />
           <div className="flex flex-1 flex-col gap-2">
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-3 w-40" />
@@ -16,6 +16,16 @@ export default function Loading() {
           <Skeleton className="h-9 w-24 rounded-md" />
           <Skeleton className="h-9 w-28 rounded-md" />
         </CardContent>
+        <div className="mt-1 grid grid-cols-2 divide-x border-t">
+          <div className="flex items-center gap-2.5 px-4 py-3">
+            <Skeleton className="size-8 shrink-0 rounded-lg" />
+            <Skeleton className="h-8 w-16" />
+          </div>
+          <div className="flex items-center gap-2.5 px-4 py-3">
+            <Skeleton className="size-8 shrink-0 rounded-lg" />
+            <Skeleton className="h-8 w-16" />
+          </div>
+        </div>
       </Card>
 
       <Card>
