@@ -68,14 +68,14 @@ export function QuestionForm({
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex min-w-0 flex-col gap-1.5">
           <Label htmlFor="topicId">Tema</Label>
           <Select
             name="topicId"
             defaultValue={question?.topicId ?? undefined}
             items={topics.map((topic) => ({ value: topic.id, label: topic.name }))}
           >
-            <SelectTrigger id="topicId">
+            <SelectTrigger id="topicId" className="w-full">
               <SelectValue placeholder="Sin tema" />
             </SelectTrigger>
             <SelectContent>
@@ -87,7 +87,7 @@ export function QuestionForm({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex min-w-0 flex-col gap-1.5">
           <Label htmlFor="difficulty">Dificultad</Label>
           <Select
             name="difficulty"
@@ -98,7 +98,7 @@ export function QuestionForm({
               { value: 'HARD', label: 'Difícil' },
             ]}
           >
-            <SelectTrigger id="difficulty">
+            <SelectTrigger id="difficulty" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
