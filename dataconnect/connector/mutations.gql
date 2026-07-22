@@ -135,8 +135,9 @@ mutation DeleteTopic($topicId: UUID!) @auth(level: NO_ACCESS) {
   topic_delete(id: $topicId)
 }
 
-# Siempre 4 respuestas (requisito de producto): 4 slots explícitos en vez de una
-# lista, porque el SDK generado todavía no soporta variables de tipo "_Data".
+# Entre 2 y 4 respuestas (requisito de producto): slots explícitos por arity
+# en vez de una lista, porque el SDK generado todavía no soporta variables de
+# tipo "_Data". CreateQuestion = 4 respuestas; CreateQuestion3 = 3; CreateQuestion2 = 2.
 mutation CreateQuestion(
   $examId: UUID!
   $topicId: UUID
@@ -164,6 +165,61 @@ mutation CreateQuestion(
         { text: $option2Text, isCorrect: $option2IsCorrect, position: 2 }
         { text: $option3Text, isCorrect: $option3IsCorrect, position: 3 }
         { text: $option4Text, isCorrect: $option4IsCorrect, position: 4 }
+      ]
+    }
+  )
+}
+
+mutation CreateQuestion3(
+  $examId: UUID!
+  $topicId: UUID
+  $statement: String!
+  $explanation: String
+  $difficulty: QuestionDifficulty!
+  $option1Text: String!
+  $option1IsCorrect: Boolean!
+  $option2Text: String!
+  $option2IsCorrect: Boolean!
+  $option3Text: String!
+  $option3IsCorrect: Boolean!
+) @auth(level: NO_ACCESS) {
+  question_insert(
+    data: {
+      examId: $examId
+      topicId: $topicId
+      statement: $statement
+      explanation: $explanation
+      difficulty: $difficulty
+      answerOptions_on_question: [
+        { text: $option1Text, isCorrect: $option1IsCorrect, position: 1 }
+        { text: $option2Text, isCorrect: $option2IsCorrect, position: 2 }
+        { text: $option3Text, isCorrect: $option3IsCorrect, position: 3 }
+      ]
+    }
+  )
+}
+
+mutation CreateQuestion2(
+  $examId: UUID!
+  $topicId: UUID
+  $statement: String!
+  $explanation: String
+  $difficulty: QuestionDifficulty!
+  $option1Text: String!
+  $option1IsCorrect: Boolean!
+  $option2Text: String!
+  $option2IsCorrect: Boolean!
+) @auth(level: NO_ACCESS) {
+  question_insert(
+    data: {
+      examId: $examId
+      topicId: $topicId
+      statement: $statement
+      explanation: $explanation
+      difficulty: $difficulty
+      answerOptions_on_question: [
+        { text: $option1Text, isCorrect: $option1IsCorrect, position: 1 }
+        { text: $option2Text, isCorrect: $option2IsCorrect, position: 2 }
       ]
     }
   )
@@ -215,6 +271,41 @@ mutation ReplaceAnswerOptions(
       { questionId: $questionId, text: $option2Text, isCorrect: $option2IsCorrect, position: 2 }
       { questionId: $questionId, text: $option3Text, isCorrect: $option3IsCorrect, position: 3 }
       { questionId: $questionId, text: $option4Text, isCorrect: $option4IsCorrect, position: 4 }
+    ]
+  )
+}
+
+mutation ReplaceAnswerOptions3(
+  $questionId: UUID!
+  $option1Text: String!
+  $option1IsCorrect: Boolean!
+  $option2Text: String!
+  $option2IsCorrect: Boolean!
+  $option3Text: String!
+  $option3IsCorrect: Boolean!
+) @auth(level: NO_ACCESS) {
+  answerOption_deleteMany(where: { questionId: { eq: $questionId } })
+  answerOption_insertMany(
+    data: [
+      { questionId: $questionId, text: $option1Text, isCorrect: $option1IsCorrect, position: 1 }
+      { questionId: $questionId, text: $option2Text, isCorrect: $option2IsCorrect, position: 2 }
+      { questionId: $questionId, text: $option3Text, isCorrect: $option3IsCorrect, position: 3 }
+    ]
+  )
+}
+
+mutation ReplaceAnswerOptions2(
+  $questionId: UUID!
+  $option1Text: String!
+  $option1IsCorrect: Boolean!
+  $option2Text: String!
+  $option2IsCorrect: Boolean!
+) @auth(level: NO_ACCESS) {
+  answerOption_deleteMany(where: { questionId: { eq: $questionId } })
+  answerOption_insertMany(
+    data: [
+      { questionId: $questionId, text: $option1Text, isCorrect: $option1IsCorrect, position: 1 }
+      { questionId: $questionId, text: $option2Text, isCorrect: $option2IsCorrect, position: 2 }
     ]
   )
 }

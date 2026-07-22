@@ -20,8 +20,9 @@ export function CsvImportForm({ examId, categoryId }: { examId: string; category
         <code>
           tema,enunciado,respuesta1,respuesta2,respuesta3,respuesta4,correcta,explicacion,dificultad
         </code>
-        .<code>correcta</code> es el número (1-4) de la respuesta correcta; <code>explicacion</code>{' '}
-        y <code>dificultad</code> (EASY/MEDIUM/HARD) son opcionales.
+        . <code>respuesta3</code> y <code>respuesta4</code> son opcionales (preguntas de 2 o 3
+        respuestas); <code>correcta</code> es el número de la respuesta correcta;{' '}
+        <code>explicacion</code> y <code>dificultad</code> (EASY/MEDIUM/HARD) son opcionales.
       </p>
       <input
         type="file"

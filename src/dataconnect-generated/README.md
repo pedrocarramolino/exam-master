@@ -47,10 +47,14 @@ This README will guide you through the process of using the generated JavaScript
   - [*CreateTopic*](#createtopic)
   - [*DeleteTopic*](#deletetopic)
   - [*CreateQuestion*](#createquestion)
+  - [*CreateQuestion3*](#createquestion3)
+  - [*CreateQuestion2*](#createquestion2)
   - [*UpdateQuestion*](#updatequestion)
   - [*DeleteAnswerOptionsByQuestion*](#deleteansweroptionsbyquestion)
   - [*DeleteQuestion*](#deletequestion)
   - [*ReplaceAnswerOptions*](#replaceansweroptions)
+  - [*ReplaceAnswerOptions3*](#replaceansweroptions3)
+  - [*ReplaceAnswerOptions2*](#replaceansweroptions2)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `exammaster`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -4245,6 +4249,278 @@ executeMutation(ref).then((response) => {
 });
 ```
 
+## CreateQuestion3
+You can execute the `CreateQuestion3` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+createQuestion3(vars: CreateQuestion3Variables): MutationPromise<CreateQuestion3Data, CreateQuestion3Variables>;
+
+interface CreateQuestion3Ref {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateQuestion3Variables): MutationRef<CreateQuestion3Data, CreateQuestion3Variables>;
+}
+export const createQuestion3Ref: CreateQuestion3Ref;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createQuestion3(dc: DataConnect, vars: CreateQuestion3Variables): MutationPromise<CreateQuestion3Data, CreateQuestion3Variables>;
+
+interface CreateQuestion3Ref {
+  ...
+  (dc: DataConnect, vars: CreateQuestion3Variables): MutationRef<CreateQuestion3Data, CreateQuestion3Variables>;
+}
+export const createQuestion3Ref: CreateQuestion3Ref;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createQuestion3Ref:
+```typescript
+const name = createQuestion3Ref.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateQuestion3` mutation requires an argument of type `CreateQuestion3Variables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateQuestion3Variables {
+  examId: UUIDString;
+  topicId?: UUIDString | null;
+  statement: string;
+  explanation?: string | null;
+  difficulty: QuestionDifficulty;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+  option3Text: string;
+  option3IsCorrect: boolean;
+}
+```
+### Return Type
+Recall that executing the `CreateQuestion3` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateQuestion3Data`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateQuestion3Data {
+  question_insert: Question_Key;
+}
+```
+### Using `CreateQuestion3`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createQuestion3, CreateQuestion3Variables } from '@dataconnect/generated';
+
+// The `CreateQuestion3` mutation requires an argument of type `CreateQuestion3Variables`:
+const createQuestion3Vars: CreateQuestion3Variables = {
+  examId: ..., 
+  topicId: ..., // optional
+  statement: ..., 
+  explanation: ..., // optional
+  difficulty: ..., 
+  option1Text: ..., 
+  option1IsCorrect: ..., 
+  option2Text: ..., 
+  option2IsCorrect: ..., 
+  option3Text: ..., 
+  option3IsCorrect: ..., 
+};
+
+// Call the `createQuestion3()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createQuestion3(createQuestion3Vars);
+// Variables can be defined inline as well.
+const { data } = await createQuestion3({ examId: ..., topicId: ..., statement: ..., explanation: ..., difficulty: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., option3Text: ..., option3IsCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createQuestion3(dataConnect, createQuestion3Vars);
+
+console.log(data.question_insert);
+
+// Or, you can use the `Promise` API.
+createQuestion3(createQuestion3Vars).then((response) => {
+  const data = response.data;
+  console.log(data.question_insert);
+});
+```
+
+### Using `CreateQuestion3`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createQuestion3Ref, CreateQuestion3Variables } from '@dataconnect/generated';
+
+// The `CreateQuestion3` mutation requires an argument of type `CreateQuestion3Variables`:
+const createQuestion3Vars: CreateQuestion3Variables = {
+  examId: ..., 
+  topicId: ..., // optional
+  statement: ..., 
+  explanation: ..., // optional
+  difficulty: ..., 
+  option1Text: ..., 
+  option1IsCorrect: ..., 
+  option2Text: ..., 
+  option2IsCorrect: ..., 
+  option3Text: ..., 
+  option3IsCorrect: ..., 
+};
+
+// Call the `createQuestion3Ref()` function to get a reference to the mutation.
+const ref = createQuestion3Ref(createQuestion3Vars);
+// Variables can be defined inline as well.
+const ref = createQuestion3Ref({ examId: ..., topicId: ..., statement: ..., explanation: ..., difficulty: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., option3Text: ..., option3IsCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createQuestion3Ref(dataConnect, createQuestion3Vars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.question_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.question_insert);
+});
+```
+
+## CreateQuestion2
+You can execute the `CreateQuestion2` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+createQuestion2(vars: CreateQuestion2Variables): MutationPromise<CreateQuestion2Data, CreateQuestion2Variables>;
+
+interface CreateQuestion2Ref {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateQuestion2Variables): MutationRef<CreateQuestion2Data, CreateQuestion2Variables>;
+}
+export const createQuestion2Ref: CreateQuestion2Ref;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createQuestion2(dc: DataConnect, vars: CreateQuestion2Variables): MutationPromise<CreateQuestion2Data, CreateQuestion2Variables>;
+
+interface CreateQuestion2Ref {
+  ...
+  (dc: DataConnect, vars: CreateQuestion2Variables): MutationRef<CreateQuestion2Data, CreateQuestion2Variables>;
+}
+export const createQuestion2Ref: CreateQuestion2Ref;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createQuestion2Ref:
+```typescript
+const name = createQuestion2Ref.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateQuestion2` mutation requires an argument of type `CreateQuestion2Variables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateQuestion2Variables {
+  examId: UUIDString;
+  topicId?: UUIDString | null;
+  statement: string;
+  explanation?: string | null;
+  difficulty: QuestionDifficulty;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+}
+```
+### Return Type
+Recall that executing the `CreateQuestion2` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateQuestion2Data`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateQuestion2Data {
+  question_insert: Question_Key;
+}
+```
+### Using `CreateQuestion2`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createQuestion2, CreateQuestion2Variables } from '@dataconnect/generated';
+
+// The `CreateQuestion2` mutation requires an argument of type `CreateQuestion2Variables`:
+const createQuestion2Vars: CreateQuestion2Variables = {
+  examId: ..., 
+  topicId: ..., // optional
+  statement: ..., 
+  explanation: ..., // optional
+  difficulty: ..., 
+  option1Text: ..., 
+  option1IsCorrect: ..., 
+  option2Text: ..., 
+  option2IsCorrect: ..., 
+};
+
+// Call the `createQuestion2()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createQuestion2(createQuestion2Vars);
+// Variables can be defined inline as well.
+const { data } = await createQuestion2({ examId: ..., topicId: ..., statement: ..., explanation: ..., difficulty: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createQuestion2(dataConnect, createQuestion2Vars);
+
+console.log(data.question_insert);
+
+// Or, you can use the `Promise` API.
+createQuestion2(createQuestion2Vars).then((response) => {
+  const data = response.data;
+  console.log(data.question_insert);
+});
+```
+
+### Using `CreateQuestion2`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createQuestion2Ref, CreateQuestion2Variables } from '@dataconnect/generated';
+
+// The `CreateQuestion2` mutation requires an argument of type `CreateQuestion2Variables`:
+const createQuestion2Vars: CreateQuestion2Variables = {
+  examId: ..., 
+  topicId: ..., // optional
+  statement: ..., 
+  explanation: ..., // optional
+  difficulty: ..., 
+  option1Text: ..., 
+  option1IsCorrect: ..., 
+  option2Text: ..., 
+  option2IsCorrect: ..., 
+};
+
+// Call the `createQuestion2Ref()` function to get a reference to the mutation.
+const ref = createQuestion2Ref(createQuestion2Vars);
+// Variables can be defined inline as well.
+const ref = createQuestion2Ref({ examId: ..., topicId: ..., statement: ..., explanation: ..., difficulty: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createQuestion2Ref(dataConnect, createQuestion2Vars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.question_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.question_insert);
+});
+```
+
 ## UpdateQuestion
 You can execute the `UpdateQuestion` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
 ```typescript
@@ -4706,6 +4982,264 @@ const ref = replaceAnswerOptionsRef({ questionId: ..., option1Text: ..., option1
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
 const ref = replaceAnswerOptionsRef(dataConnect, replaceAnswerOptionsVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.answerOption_deleteMany);
+console.log(data.answerOption_insertMany);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.answerOption_deleteMany);
+  console.log(data.answerOption_insertMany);
+});
+```
+
+## ReplaceAnswerOptions3
+You can execute the `ReplaceAnswerOptions3` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+replaceAnswerOptions3(vars: ReplaceAnswerOptions3Variables): MutationPromise<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+
+interface ReplaceAnswerOptions3Ref {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: ReplaceAnswerOptions3Variables): MutationRef<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+}
+export const replaceAnswerOptions3Ref: ReplaceAnswerOptions3Ref;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+replaceAnswerOptions3(dc: DataConnect, vars: ReplaceAnswerOptions3Variables): MutationPromise<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+
+interface ReplaceAnswerOptions3Ref {
+  ...
+  (dc: DataConnect, vars: ReplaceAnswerOptions3Variables): MutationRef<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+}
+export const replaceAnswerOptions3Ref: ReplaceAnswerOptions3Ref;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the replaceAnswerOptions3Ref:
+```typescript
+const name = replaceAnswerOptions3Ref.operationName;
+console.log(name);
+```
+
+### Variables
+The `ReplaceAnswerOptions3` mutation requires an argument of type `ReplaceAnswerOptions3Variables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface ReplaceAnswerOptions3Variables {
+  questionId: UUIDString;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+  option3Text: string;
+  option3IsCorrect: boolean;
+}
+```
+### Return Type
+Recall that executing the `ReplaceAnswerOptions3` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `ReplaceAnswerOptions3Data`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface ReplaceAnswerOptions3Data {
+  answerOption_deleteMany: number;
+  answerOption_insertMany: AnswerOption_Key[];
+}
+```
+### Using `ReplaceAnswerOptions3`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, replaceAnswerOptions3, ReplaceAnswerOptions3Variables } from '@dataconnect/generated';
+
+// The `ReplaceAnswerOptions3` mutation requires an argument of type `ReplaceAnswerOptions3Variables`:
+const replaceAnswerOptions3Vars: ReplaceAnswerOptions3Variables = {
+  questionId: ..., 
+  option1Text: ..., 
+  option1IsCorrect: ..., 
+  option2Text: ..., 
+  option2IsCorrect: ..., 
+  option3Text: ..., 
+  option3IsCorrect: ..., 
+};
+
+// Call the `replaceAnswerOptions3()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await replaceAnswerOptions3(replaceAnswerOptions3Vars);
+// Variables can be defined inline as well.
+const { data } = await replaceAnswerOptions3({ questionId: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., option3Text: ..., option3IsCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await replaceAnswerOptions3(dataConnect, replaceAnswerOptions3Vars);
+
+console.log(data.answerOption_deleteMany);
+console.log(data.answerOption_insertMany);
+
+// Or, you can use the `Promise` API.
+replaceAnswerOptions3(replaceAnswerOptions3Vars).then((response) => {
+  const data = response.data;
+  console.log(data.answerOption_deleteMany);
+  console.log(data.answerOption_insertMany);
+});
+```
+
+### Using `ReplaceAnswerOptions3`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, replaceAnswerOptions3Ref, ReplaceAnswerOptions3Variables } from '@dataconnect/generated';
+
+// The `ReplaceAnswerOptions3` mutation requires an argument of type `ReplaceAnswerOptions3Variables`:
+const replaceAnswerOptions3Vars: ReplaceAnswerOptions3Variables = {
+  questionId: ..., 
+  option1Text: ..., 
+  option1IsCorrect: ..., 
+  option2Text: ..., 
+  option2IsCorrect: ..., 
+  option3Text: ..., 
+  option3IsCorrect: ..., 
+};
+
+// Call the `replaceAnswerOptions3Ref()` function to get a reference to the mutation.
+const ref = replaceAnswerOptions3Ref(replaceAnswerOptions3Vars);
+// Variables can be defined inline as well.
+const ref = replaceAnswerOptions3Ref({ questionId: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., option3Text: ..., option3IsCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = replaceAnswerOptions3Ref(dataConnect, replaceAnswerOptions3Vars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.answerOption_deleteMany);
+console.log(data.answerOption_insertMany);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.answerOption_deleteMany);
+  console.log(data.answerOption_insertMany);
+});
+```
+
+## ReplaceAnswerOptions2
+You can execute the `ReplaceAnswerOptions2` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+replaceAnswerOptions2(vars: ReplaceAnswerOptions2Variables): MutationPromise<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+
+interface ReplaceAnswerOptions2Ref {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: ReplaceAnswerOptions2Variables): MutationRef<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+}
+export const replaceAnswerOptions2Ref: ReplaceAnswerOptions2Ref;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+replaceAnswerOptions2(dc: DataConnect, vars: ReplaceAnswerOptions2Variables): MutationPromise<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+
+interface ReplaceAnswerOptions2Ref {
+  ...
+  (dc: DataConnect, vars: ReplaceAnswerOptions2Variables): MutationRef<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+}
+export const replaceAnswerOptions2Ref: ReplaceAnswerOptions2Ref;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the replaceAnswerOptions2Ref:
+```typescript
+const name = replaceAnswerOptions2Ref.operationName;
+console.log(name);
+```
+
+### Variables
+The `ReplaceAnswerOptions2` mutation requires an argument of type `ReplaceAnswerOptions2Variables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface ReplaceAnswerOptions2Variables {
+  questionId: UUIDString;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+}
+```
+### Return Type
+Recall that executing the `ReplaceAnswerOptions2` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `ReplaceAnswerOptions2Data`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface ReplaceAnswerOptions2Data {
+  answerOption_deleteMany: number;
+  answerOption_insertMany: AnswerOption_Key[];
+}
+```
+### Using `ReplaceAnswerOptions2`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, replaceAnswerOptions2, ReplaceAnswerOptions2Variables } from '@dataconnect/generated';
+
+// The `ReplaceAnswerOptions2` mutation requires an argument of type `ReplaceAnswerOptions2Variables`:
+const replaceAnswerOptions2Vars: ReplaceAnswerOptions2Variables = {
+  questionId: ..., 
+  option1Text: ..., 
+  option1IsCorrect: ..., 
+  option2Text: ..., 
+  option2IsCorrect: ..., 
+};
+
+// Call the `replaceAnswerOptions2()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await replaceAnswerOptions2(replaceAnswerOptions2Vars);
+// Variables can be defined inline as well.
+const { data } = await replaceAnswerOptions2({ questionId: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await replaceAnswerOptions2(dataConnect, replaceAnswerOptions2Vars);
+
+console.log(data.answerOption_deleteMany);
+console.log(data.answerOption_insertMany);
+
+// Or, you can use the `Promise` API.
+replaceAnswerOptions2(replaceAnswerOptions2Vars).then((response) => {
+  const data = response.data;
+  console.log(data.answerOption_deleteMany);
+  console.log(data.answerOption_insertMany);
+});
+```
+
+### Using `ReplaceAnswerOptions2`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, replaceAnswerOptions2Ref, ReplaceAnswerOptions2Variables } from '@dataconnect/generated';
+
+// The `ReplaceAnswerOptions2` mutation requires an argument of type `ReplaceAnswerOptions2Variables`:
+const replaceAnswerOptions2Vars: ReplaceAnswerOptions2Variables = {
+  questionId: ..., 
+  option1Text: ..., 
+  option1IsCorrect: ..., 
+  option2Text: ..., 
+  option2IsCorrect: ..., 
+};
+
+// Call the `replaceAnswerOptions2Ref()` function to get a reference to the mutation.
+const ref = replaceAnswerOptions2Ref(replaceAnswerOptions2Vars);
+// Variables can be defined inline as well.
+const ref = replaceAnswerOptions2Ref({ questionId: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = replaceAnswerOptions2Ref(dataConnect, replaceAnswerOptions2Vars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.

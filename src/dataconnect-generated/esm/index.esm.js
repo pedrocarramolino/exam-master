@@ -255,6 +255,30 @@ export function createQuestion(dcOrVars, vars) {
   return executeMutation(createQuestionRef(dcInstance, inputVars));
 }
 
+export const createQuestion3Ref = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateQuestion3', inputVars);
+}
+createQuestion3Ref.operationName = 'CreateQuestion3';
+
+export function createQuestion3(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(createQuestion3Ref(dcInstance, inputVars));
+}
+
+export const createQuestion2Ref = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateQuestion2', inputVars);
+}
+createQuestion2Ref.operationName = 'CreateQuestion2';
+
+export function createQuestion2(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(createQuestion2Ref(dcInstance, inputVars));
+}
+
 export const updateQuestionRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -301,6 +325,30 @@ replaceAnswerOptionsRef.operationName = 'ReplaceAnswerOptions';
 export function replaceAnswerOptions(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
   return executeMutation(replaceAnswerOptionsRef(dcInstance, inputVars));
+}
+
+export const replaceAnswerOptions3Ref = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'ReplaceAnswerOptions3', inputVars);
+}
+replaceAnswerOptions3Ref.operationName = 'ReplaceAnswerOptions3';
+
+export function replaceAnswerOptions3(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(replaceAnswerOptions3Ref(dcInstance, inputVars));
+}
+
+export const replaceAnswerOptions2Ref = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'ReplaceAnswerOptions2', inputVars);
+}
+replaceAnswerOptions2Ref.operationName = 'ReplaceAnswerOptions2';
+
+export function replaceAnswerOptions2(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(replaceAnswerOptions2Ref(dcInstance, inputVars));
 }
 
 export const listExamCategoriesRef = (dc) => {

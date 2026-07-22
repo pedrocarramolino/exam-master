@@ -54,10 +54,14 @@ You can also follow the instructions from the [Data Connect documentation](https
   - [*CreateTopic*](#createtopic)
   - [*DeleteTopic*](#deletetopic)
   - [*CreateQuestion*](#createquestion)
+  - [*CreateQuestion3*](#createquestion3)
+  - [*CreateQuestion2*](#createquestion2)
   - [*UpdateQuestion*](#updatequestion)
   - [*DeleteAnswerOptionsByQuestion*](#deleteansweroptionsbyquestion)
   - [*DeleteQuestion*](#deletequestion)
   - [*ReplaceAnswerOptions*](#replaceansweroptions)
+  - [*ReplaceAnswerOptions3*](#replaceansweroptions3)
+  - [*ReplaceAnswerOptions2*](#replaceansweroptions2)
 
 # TanStack Query Firebase & TanStack React Query
 This SDK provides [React](https://react.dev/) hooks generated specific to your application, for the operations found in the connector `exammaster`. These hooks are generated using [TanStack Query Firebase](https://react-query-firebase.invertase.dev/) by our partners at Invertase, a library built on top of [TanStack React Query v5](https://tanstack.com/query/v5/docs/framework/react/overview).
@@ -3540,6 +3544,230 @@ export default function CreateQuestionComponent() {
 }
 ```
 
+## CreateQuestion3
+You can execute the `CreateQuestion3` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useCreateQuestion3(options?: useDataConnectMutationOptions<CreateQuestion3Data, FirebaseError, CreateQuestion3Variables>): UseDataConnectMutationResult<CreateQuestion3Data, CreateQuestion3Variables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useCreateQuestion3(dc: DataConnect, options?: useDataConnectMutationOptions<CreateQuestion3Data, FirebaseError, CreateQuestion3Variables>): UseDataConnectMutationResult<CreateQuestion3Data, CreateQuestion3Variables>;
+```
+
+### Variables
+The `CreateQuestion3` Mutation requires an argument of type `CreateQuestion3Variables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface CreateQuestion3Variables {
+  examId: UUIDString;
+  topicId?: UUIDString | null;
+  statement: string;
+  explanation?: string | null;
+  difficulty: QuestionDifficulty;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+  option3Text: string;
+  option3IsCorrect: boolean;
+}
+```
+### Return Type
+Recall that calling the `CreateQuestion3` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `CreateQuestion3` Mutation is of type `CreateQuestion3Data`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface CreateQuestion3Data {
+  question_insert: Question_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `CreateQuestion3`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, CreateQuestion3Variables } from '@dataconnect/generated';
+import { useCreateQuestion3 } from '@dataconnect/generated/react'
+
+export default function CreateQuestion3Component() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useCreateQuestion3();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useCreateQuestion3(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateQuestion3(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateQuestion3(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useCreateQuestion3` Mutation requires an argument of type `CreateQuestion3Variables`:
+  const createQuestion3Vars: CreateQuestion3Variables = {
+    examId: ..., 
+    topicId: ..., // optional
+    statement: ..., 
+    explanation: ..., // optional
+    difficulty: ..., 
+    option1Text: ..., 
+    option1IsCorrect: ..., 
+    option2Text: ..., 
+    option2IsCorrect: ..., 
+    option3Text: ..., 
+    option3IsCorrect: ..., 
+  };
+  mutation.mutate(createQuestion3Vars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ examId: ..., topicId: ..., statement: ..., explanation: ..., difficulty: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., option3Text: ..., option3IsCorrect: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(createQuestion3Vars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.question_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## CreateQuestion2
+You can execute the `CreateQuestion2` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useCreateQuestion2(options?: useDataConnectMutationOptions<CreateQuestion2Data, FirebaseError, CreateQuestion2Variables>): UseDataConnectMutationResult<CreateQuestion2Data, CreateQuestion2Variables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useCreateQuestion2(dc: DataConnect, options?: useDataConnectMutationOptions<CreateQuestion2Data, FirebaseError, CreateQuestion2Variables>): UseDataConnectMutationResult<CreateQuestion2Data, CreateQuestion2Variables>;
+```
+
+### Variables
+The `CreateQuestion2` Mutation requires an argument of type `CreateQuestion2Variables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface CreateQuestion2Variables {
+  examId: UUIDString;
+  topicId?: UUIDString | null;
+  statement: string;
+  explanation?: string | null;
+  difficulty: QuestionDifficulty;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+}
+```
+### Return Type
+Recall that calling the `CreateQuestion2` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `CreateQuestion2` Mutation is of type `CreateQuestion2Data`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface CreateQuestion2Data {
+  question_insert: Question_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `CreateQuestion2`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, CreateQuestion2Variables } from '@dataconnect/generated';
+import { useCreateQuestion2 } from '@dataconnect/generated/react'
+
+export default function CreateQuestion2Component() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useCreateQuestion2();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useCreateQuestion2(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateQuestion2(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreateQuestion2(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useCreateQuestion2` Mutation requires an argument of type `CreateQuestion2Variables`:
+  const createQuestion2Vars: CreateQuestion2Variables = {
+    examId: ..., 
+    topicId: ..., // optional
+    statement: ..., 
+    explanation: ..., // optional
+    difficulty: ..., 
+    option1Text: ..., 
+    option1IsCorrect: ..., 
+    option2Text: ..., 
+    option2IsCorrect: ..., 
+  };
+  mutation.mutate(createQuestion2Vars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ examId: ..., topicId: ..., statement: ..., explanation: ..., difficulty: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(createQuestion2Vars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.question_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
 ## UpdateQuestion
 You can execute the `UpdateQuestion` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
 ```javascript
@@ -3923,6 +4151,218 @@ export default function ReplaceAnswerOptionsComponent() {
     onSuccess: () => { console.log('Mutation succeeded!'); }
   };
   mutation.mutate(replaceAnswerOptionsVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.answerOption_deleteMany);
+    console.log(mutation.data.answerOption_insertMany);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## ReplaceAnswerOptions3
+You can execute the `ReplaceAnswerOptions3` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useReplaceAnswerOptions3(options?: useDataConnectMutationOptions<ReplaceAnswerOptions3Data, FirebaseError, ReplaceAnswerOptions3Variables>): UseDataConnectMutationResult<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useReplaceAnswerOptions3(dc: DataConnect, options?: useDataConnectMutationOptions<ReplaceAnswerOptions3Data, FirebaseError, ReplaceAnswerOptions3Variables>): UseDataConnectMutationResult<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+```
+
+### Variables
+The `ReplaceAnswerOptions3` Mutation requires an argument of type `ReplaceAnswerOptions3Variables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface ReplaceAnswerOptions3Variables {
+  questionId: UUIDString;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+  option3Text: string;
+  option3IsCorrect: boolean;
+}
+```
+### Return Type
+Recall that calling the `ReplaceAnswerOptions3` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `ReplaceAnswerOptions3` Mutation is of type `ReplaceAnswerOptions3Data`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ReplaceAnswerOptions3Data {
+  answerOption_deleteMany: number;
+  answerOption_insertMany: AnswerOption_Key[];
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `ReplaceAnswerOptions3`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, ReplaceAnswerOptions3Variables } from '@dataconnect/generated';
+import { useReplaceAnswerOptions3 } from '@dataconnect/generated/react'
+
+export default function ReplaceAnswerOptions3Component() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useReplaceAnswerOptions3();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useReplaceAnswerOptions3(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useReplaceAnswerOptions3(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useReplaceAnswerOptions3(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useReplaceAnswerOptions3` Mutation requires an argument of type `ReplaceAnswerOptions3Variables`:
+  const replaceAnswerOptions3Vars: ReplaceAnswerOptions3Variables = {
+    questionId: ..., 
+    option1Text: ..., 
+    option1IsCorrect: ..., 
+    option2Text: ..., 
+    option2IsCorrect: ..., 
+    option3Text: ..., 
+    option3IsCorrect: ..., 
+  };
+  mutation.mutate(replaceAnswerOptions3Vars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ questionId: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., option3Text: ..., option3IsCorrect: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(replaceAnswerOptions3Vars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.answerOption_deleteMany);
+    console.log(mutation.data.answerOption_insertMany);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## ReplaceAnswerOptions2
+You can execute the `ReplaceAnswerOptions2` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useReplaceAnswerOptions2(options?: useDataConnectMutationOptions<ReplaceAnswerOptions2Data, FirebaseError, ReplaceAnswerOptions2Variables>): UseDataConnectMutationResult<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useReplaceAnswerOptions2(dc: DataConnect, options?: useDataConnectMutationOptions<ReplaceAnswerOptions2Data, FirebaseError, ReplaceAnswerOptions2Variables>): UseDataConnectMutationResult<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+```
+
+### Variables
+The `ReplaceAnswerOptions2` Mutation requires an argument of type `ReplaceAnswerOptions2Variables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface ReplaceAnswerOptions2Variables {
+  questionId: UUIDString;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+}
+```
+### Return Type
+Recall that calling the `ReplaceAnswerOptions2` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `ReplaceAnswerOptions2` Mutation is of type `ReplaceAnswerOptions2Data`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ReplaceAnswerOptions2Data {
+  answerOption_deleteMany: number;
+  answerOption_insertMany: AnswerOption_Key[];
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `ReplaceAnswerOptions2`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, ReplaceAnswerOptions2Variables } from '@dataconnect/generated';
+import { useReplaceAnswerOptions2 } from '@dataconnect/generated/react'
+
+export default function ReplaceAnswerOptions2Component() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useReplaceAnswerOptions2();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useReplaceAnswerOptions2(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useReplaceAnswerOptions2(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useReplaceAnswerOptions2(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useReplaceAnswerOptions2` Mutation requires an argument of type `ReplaceAnswerOptions2Variables`:
+  const replaceAnswerOptions2Vars: ReplaceAnswerOptions2Variables = {
+    questionId: ..., 
+    option1Text: ..., 
+    option1IsCorrect: ..., 
+    option2Text: ..., 
+    option2IsCorrect: ..., 
+  };
+  mutation.mutate(replaceAnswerOptions2Vars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ questionId: ..., option1Text: ..., option1IsCorrect: ..., option2Text: ..., option2IsCorrect: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(replaceAnswerOptions2Vars, options);
 
   // Then, you can render your component dynamically based on the status of the Mutation.
   if (mutation.isPending) {

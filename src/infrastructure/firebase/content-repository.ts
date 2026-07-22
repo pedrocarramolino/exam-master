@@ -23,6 +23,10 @@ import type {
   CreateExamVariables,
   CreateQuestionData,
   CreateQuestionVariables,
+  CreateQuestion2Data,
+  CreateQuestion2Variables,
+  CreateQuestion3Data,
+  CreateQuestion3Variables,
   CreateTopicData,
   CreateTopicVariables,
   DeleteExamCategoryData,
@@ -42,6 +46,10 @@ import type {
   ListExamCategoriesData,
   ReplaceAnswerOptionsData,
   ReplaceAnswerOptionsVariables,
+  ReplaceAnswerOptions2Data,
+  ReplaceAnswerOptions2Variables,
+  ReplaceAnswerOptions3Data,
+  ReplaceAnswerOptions3Variables,
   UpdateExamCategoryData,
   UpdateExamCategoryVariables,
   UpdateExamData,
@@ -74,12 +82,19 @@ import type {
 } from '@/domain/repositories/content-repository';
 import { dataConnectAdmin } from '@/infrastructure/firebase/data-connect-admin';
 
-const ANSWER_OPTIONS_COUNT = 4;
+const MIN_ANSWER_OPTIONS = 2;
+const MAX_ANSWER_OPTIONS = 4;
+
+function assertValidOptionCount(options: AnswerOptionInput[]): void {
+  if (options.length < MIN_ANSWER_OPTIONS || options.length > MAX_ANSWER_OPTIONS) {
+    throw new Error(
+      `Cada pregunta debe tener entre ${MIN_ANSWER_OPTIONS} y ${MAX_ANSWER_OPTIONS} respuestas.`,
+    );
+  }
+}
 
 function toOptionVariables(options: AnswerOptionInput[]) {
-  if (options.length !== ANSWER_OPTIONS_COUNT) {
-    throw new Error(`Cada pregunta debe tener exactamente ${ANSWER_OPTIONS_COUNT} respuestas.`);
-  }
+  assertValidOptionCount(options);
   return {
     option1Text: options[0]!.text,
     option1IsCorrect: options[0]!.isCorrect,
@@ -89,6 +104,26 @@ function toOptionVariables(options: AnswerOptionInput[]) {
     option3IsCorrect: options[2]!.isCorrect,
     option4Text: options[3]!.text,
     option4IsCorrect: options[3]!.isCorrect,
+  };
+}
+
+function toOption3Variables(options: AnswerOptionInput[]) {
+  return {
+    option1Text: options[0]!.text,
+    option1IsCorrect: options[0]!.isCorrect,
+    option2Text: options[1]!.text,
+    option2IsCorrect: options[1]!.isCorrect,
+    option3Text: options[2]!.text,
+    option3IsCorrect: options[2]!.isCorrect,
+  };
+}
+
+function toOption2Variables(options: AnswerOptionInput[]) {
+  return {
+    option1Text: options[0]!.text,
+    option1IsCorrect: options[0]!.isCorrect,
+    option2Text: options[1]!.text,
+    option2IsCorrect: options[1]!.isCorrect,
   };
 }
 
@@ -273,20 +308,36 @@ export class DataConnectContentRepository implements ContentRepository {
   }
 
   async createQuestion(input: CreateQuestionInput): Promise<void> {
+    assertValidOptionCount(input.options);
+    const base = {
+      examId: input.examId,
+      topicId: input.topicId,
+      statement: input.statement,
+      explanation: input.explanation,
+      difficulty: input.difficulty as GeneratedQuestionDifficulty,
+    };
+    if (input.options.length === 2) {
+      await dataConnectAdmin.executeMutation<CreateQuestion2Data, CreateQuestion2Variables>(
+        'CreateQuestion2',
+        { ...base, ...toOption2Variables(input.options) },
+      );
+      return;
+    }
+    if (input.options.length === 3) {
+      await dataConnectAdmin.executeMutation<CreateQuestion3Data, CreateQuestion3Variables>(
+        'CreateQuestion3',
+        { ...base, ...toOption3Variables(input.options) },
+      );
+      return;
+    }
     await dataConnectAdmin.executeMutation<CreateQuestionData, CreateQuestionVariables>(
       'CreateQuestion',
-      {
-        examId: input.examId,
-        topicId: input.topicId,
-        statement: input.statement,
-        explanation: input.explanation,
-        difficulty: input.difficulty as GeneratedQuestionDifficulty,
-        ...toOptionVariables(input.options),
-      },
+      { ...base, ...toOptionVariables(input.options) },
     );
   }
 
   async updateQuestion(id: string, input: Omit<CreateQuestionInput, 'examId'>): Promise<void> {
+    assertValidOptionCount(input.options);
     await dataConnectAdmin.executeMutation<UpdateQuestionData, UpdateQuestionVariables>(
       'UpdateQuestion',
       {
@@ -297,6 +348,20 @@ export class DataConnectContentRepository implements ContentRepository {
         difficulty: input.difficulty as GeneratedQuestionDifficulty,
       },
     );
+    if (input.options.length === 2) {
+      await dataConnectAdmin.executeMutation<
+        ReplaceAnswerOptions2Data,
+        ReplaceAnswerOptions2Variables
+      >('ReplaceAnswerOptions2', { questionId: id, ...toOption2Variables(input.options) });
+      return;
+    }
+    if (input.options.length === 3) {
+      await dataConnectAdmin.executeMutation<
+        ReplaceAnswerOptions3Data,
+        ReplaceAnswerOptions3Variables
+      >('ReplaceAnswerOptions3', { questionId: id, ...toOption3Variables(input.options) });
+      return;
+    }
     await dataConnectAdmin.executeMutation<ReplaceAnswerOptionsData, ReplaceAnswerOptionsVariables>(
       'ReplaceAnswerOptions',
       { questionId: id, ...toOptionVariables(input.options) },

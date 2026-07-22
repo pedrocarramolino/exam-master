@@ -11,25 +11,35 @@ import type { ActionState } from '@/features/admin/actions/categories';
 
 const contentRepository = new DataConnectContentRepository();
 
-const questionSchema = z.object({
-  topicId: z.string().trim().optional(),
-  statement: z.string().trim().min(3, 'El enunciado es obligatorio.'),
-  explanation: z.string().trim().optional(),
-  difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
-  option1: z.string().trim().min(1, 'Falta la respuesta 1.'),
-  option2: z.string().trim().min(1, 'Falta la respuesta 2.'),
-  option3: z.string().trim().min(1, 'Falta la respuesta 3.'),
-  option4: z.string().trim().min(1, 'Falta la respuesta 4.'),
-  correctPosition: z.coerce.number().int().min(1).max(4),
-});
+const questionSchema = z
+  .object({
+    topicId: z.string().trim().optional(),
+    statement: z.string().trim().min(3, 'El enunciado es obligatorio.'),
+    explanation: z.string().trim().optional(),
+    difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
+    optionText: z
+      .array(z.string().trim().min(1, 'Las respuestas no pueden estar vacías.'))
+      .min(2, 'Debe haber al menos 2 respuestas.')
+      .max(4, 'Como máximo 4 respuestas.'),
+    correctPosition: z.coerce.number().int().min(1).max(4),
+  })
+  .refine((data) => data.correctPosition <= data.optionText.length, {
+    message: 'La respuesta correcta no coincide con ninguna respuesta.',
+    path: ['correctPosition'],
+  });
 
 function toOptions(data: z.infer<typeof questionSchema>): AnswerOptionInput[] {
-  const texts = [data.option1, data.option2, data.option3, data.option4];
-  return texts.map((text, i) => ({
+  return data.optionText.map((text, i) => ({
     text,
     isCorrect: i === data.correctPosition - 1,
     position: i + 1,
   }));
+}
+
+function parseQuestionForm(formData: FormData) {
+  const scalars = Object.fromEntries(formData);
+  delete scalars.optionText;
+  return questionSchema.safeParse({ ...scalars, optionText: formData.getAll('optionText') });
 }
 
 export async function createQuestionAction(
@@ -38,7 +48,7 @@ export async function createQuestionAction(
   formData: FormData,
 ): Promise<ActionState> {
   await requireAdmin();
-  const parsed = questionSchema.safeParse(Object.fromEntries(formData));
+  const parsed = parseQuestionForm(formData);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
   }
@@ -62,7 +72,7 @@ export async function updateQuestionAction(
   formData: FormData,
 ): Promise<ActionState> {
   await requireAdmin();
-  const parsed = questionSchema.safeParse(Object.fromEntries(formData));
+  const parsed = parseQuestionForm(formData);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos.' };
   }

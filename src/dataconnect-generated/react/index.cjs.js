@@ -1,4 +1,4 @@
-const { upsertUserRef, startExamAttemptRef, saveAttemptAnswerRef, finishExamAttemptRef, createExamCategoryRef, updateExamCategoryRef, deleteExamCategoryRef, createExamGroupRef, updateExamGroupRef, deleteExamGroupRef, createExamEditionRef, updateExamEditionRef, deleteExamEditionRef, createExamRef, updateExamRef, deleteExamRef, createTopicRef, deleteTopicRef, createQuestionRef, updateQuestionRef, deleteAnswerOptionsByQuestionRef, deleteQuestionRef, replaceAnswerOptionsRef, listExamCategoriesRef, listExamGroupsByCategoryRef, listExamEditionsByGroupRef, listExamsByEditionRef, getExamForAttemptRef, getAttemptReviewRef, getMyAttemptsRef, getMyAnswersWithTopicRef, getInProgressAttemptRef, getAttemptByIdRef, getUserRoleRef, adminListGroupsRef, adminListEditionsRef, adminListExamsRef, adminListTopicsRef, adminListQuestionsRef, adminGetQuestionRef, connectorConfig } = require('../index.cjs.js');
+const { upsertUserRef, startExamAttemptRef, saveAttemptAnswerRef, finishExamAttemptRef, createExamCategoryRef, updateExamCategoryRef, deleteExamCategoryRef, createExamGroupRef, updateExamGroupRef, deleteExamGroupRef, createExamEditionRef, updateExamEditionRef, deleteExamEditionRef, createExamRef, updateExamRef, deleteExamRef, createTopicRef, deleteTopicRef, createQuestionRef, createQuestion3Ref, createQuestion2Ref, updateQuestionRef, deleteAnswerOptionsByQuestionRef, deleteQuestionRef, replaceAnswerOptionsRef, replaceAnswerOptions3Ref, replaceAnswerOptions2Ref, listExamCategoriesRef, listExamGroupsByCategoryRef, listExamEditionsByGroupRef, listExamsByEditionRef, getExamForAttemptRef, getAttemptReviewRef, getMyAttemptsRef, getMyAnswersWithTopicRef, getInProgressAttemptRef, getAttemptByIdRef, getUserRoleRef, adminListGroupsRef, adminListEditionsRef, adminListExamsRef, adminListTopicsRef, adminListQuestionsRef, adminGetQuestionRef, connectorConfig } = require('../index.cjs.js');
 const { validateArgs, CallerSdkTypeEnum } = require('firebase/data-connect');
 const { useDataConnectQuery, useDataConnectMutation, validateReactArgs } = require('@tanstack-query-firebase/react/data-connect');
 
@@ -154,6 +154,22 @@ exports.useCreateQuestion = function useCreateQuestion(dcOrOptions, options) {
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 
+exports.useCreateQuestion3 = function useCreateQuestion3(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return createQuestion3Ref(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useCreateQuestion2 = function useCreateQuestion2(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return createQuestion2Ref(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
 exports.useUpdateQuestion = function useUpdateQuestion(dcOrOptions, options) {
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
   function refFactory(vars) {
@@ -182,6 +198,22 @@ exports.useReplaceAnswerOptions = function useReplaceAnswerOptions(dcOrOptions, 
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
   function refFactory(vars) {
     return replaceAnswerOptionsRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useReplaceAnswerOptions3 = function useReplaceAnswerOptions3(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return replaceAnswerOptions3Ref(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useReplaceAnswerOptions2 = function useReplaceAnswerOptions2(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return replaceAnswerOptions2Ref(dcInstance, vars);
   }
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }

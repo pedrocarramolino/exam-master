@@ -4,21 +4,35 @@ import { z } from 'zod';
 import type { AnswerOptionInput } from '@/domain/entities/content';
 import type { ContentRepository } from '@/domain/repositories/content-repository';
 
-const csvRowSchema = z.object({
-  tema: z.string().trim().min(1, 'El tema es obligatorio.'),
-  enunciado: z.string().trim().min(1, 'El enunciado es obligatorio.'),
-  respuesta1: z.string().trim().min(1, 'Falta la respuesta 1.'),
-  respuesta2: z.string().trim().min(1, 'Falta la respuesta 2.'),
-  respuesta3: z.string().trim().min(1, 'Falta la respuesta 3.'),
-  respuesta4: z.string().trim().min(1, 'Falta la respuesta 4.'),
-  correcta: z.coerce
-    .number()
-    .int()
-    .min(1, 'correcta debe ser 1-4.')
-    .max(4, 'correcta debe ser 1-4.'),
-  explicacion: z.string().trim().optional(),
-  dificultad: z.enum(['EASY', 'MEDIUM', 'HARD']).optional().default('MEDIUM'),
-});
+const csvRowSchema = z
+  .object({
+    tema: z.string().trim().min(1, 'El tema es obligatorio.'),
+    enunciado: z.string().trim().min(1, 'El enunciado es obligatorio.'),
+    respuesta1: z.string().trim().min(1, 'Falta la respuesta 1.'),
+    respuesta2: z.string().trim().min(1, 'Falta la respuesta 2.'),
+    respuesta3: z.string().trim().optional(),
+    respuesta4: z.string().trim().optional(),
+    correcta: z.coerce
+      .number()
+      .int()
+      .min(1, 'correcta debe ser 1-4.')
+      .max(4, 'correcta debe ser 1-4.'),
+    explicacion: z.string().trim().optional(),
+    dificultad: z.enum(['EASY', 'MEDIUM', 'HARD']).optional().default('MEDIUM'),
+  })
+  .refine((row) => !row.respuesta4 || !!row.respuesta3, {
+    message: 'No puede haber respuesta4 sin respuesta3.',
+    path: ['respuesta4'],
+  })
+  .refine(
+    (row) =>
+      row.correcta <=
+      [row.respuesta1, row.respuesta2, row.respuesta3, row.respuesta4].filter(Boolean).length,
+    {
+      message: 'correcta no coincide con ninguna respuesta.',
+      path: ['correcta'],
+    },
+  );
 
 export interface ImportRowError {
   row: number;
@@ -33,8 +47,10 @@ export interface ImportQuestionsResult {
 /**
  * Formato esperado del CSV (cabecera):
  * tema,enunciado,respuesta1,respuesta2,respuesta3,respuesta4,correcta,explicacion,dificultad
- * "correcta" es el número (1-4) de la respuesta correcta. "dificultad" es opcional
- * (EASY/MEDIUM/HARD, por defecto MEDIUM). "explicacion" es opcional.
+ * "respuesta3" y "respuesta4" son opcionales (preguntas de 2 o 3 respuestas);
+ * si se usa "respuesta4" debe haber también "respuesta3". "correcta" es el número
+ * (1-4, según cuántas respuestas tenga la fila) de la respuesta correcta. "dificultad"
+ * es opcional (EASY/MEDIUM/HARD, por defecto MEDIUM). "explicacion" es opcional.
  */
 export async function importQuestionsFromCsv(
   contentRepository: ContentRepository,
@@ -74,7 +90,9 @@ export async function importQuestionsFromCsv(
         topicIdByName.set(row.tema.toLowerCase(), topicId);
       }
 
-      const texts = [row.respuesta1, row.respuesta2, row.respuesta3, row.respuesta4];
+      const texts = [row.respuesta1, row.respuesta2, row.respuesta3, row.respuesta4].filter(
+        (text): text is string => !!text,
+      );
       const options: AnswerOptionInput[] = texts.map((text, i) => ({
         text,
         isCorrect: i === row.correcta - 1,

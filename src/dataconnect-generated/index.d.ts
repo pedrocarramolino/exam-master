@@ -175,6 +175,40 @@ export interface CreateExamVariables {
   durationMinutes: number;
 }
 
+export interface CreateQuestion2Data {
+  question_insert: Question_Key;
+}
+
+export interface CreateQuestion2Variables {
+  examId: UUIDString;
+  topicId?: UUIDString | null;
+  statement: string;
+  explanation?: string | null;
+  difficulty: QuestionDifficulty;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+}
+
+export interface CreateQuestion3Data {
+  question_insert: Question_Key;
+}
+
+export interface CreateQuestion3Variables {
+  examId: UUIDString;
+  topicId?: UUIDString | null;
+  statement: string;
+  explanation?: string | null;
+  difficulty: QuestionDifficulty;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+  option3Text: string;
+  option3IsCorrect: boolean;
+}
+
 export interface CreateQuestionData {
   question_insert: Question_Key;
 }
@@ -476,6 +510,34 @@ export interface ListExamsByEditionVariables {
 export interface Question_Key {
   id: UUIDString;
   __typename?: 'Question_Key';
+}
+
+export interface ReplaceAnswerOptions2Data {
+  answerOption_deleteMany: number;
+  answerOption_insertMany: AnswerOption_Key[];
+}
+
+export interface ReplaceAnswerOptions2Variables {
+  questionId: UUIDString;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+}
+
+export interface ReplaceAnswerOptions3Data {
+  answerOption_deleteMany: number;
+  answerOption_insertMany: AnswerOption_Key[];
+}
+
+export interface ReplaceAnswerOptions3Variables {
+  questionId: UUIDString;
+  option1Text: string;
+  option1IsCorrect: boolean;
+  option2Text: string;
+  option2IsCorrect: boolean;
+  option3Text: string;
+  option3IsCorrect: boolean;
 }
 
 export interface ReplaceAnswerOptionsData {
@@ -815,6 +877,30 @@ export const createQuestionRef: CreateQuestionRef;
 export function createQuestion(vars: CreateQuestionVariables): MutationPromise<CreateQuestionData, CreateQuestionVariables>;
 export function createQuestion(dc: DataConnect, vars: CreateQuestionVariables): MutationPromise<CreateQuestionData, CreateQuestionVariables>;
 
+interface CreateQuestion3Ref {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateQuestion3Variables): MutationRef<CreateQuestion3Data, CreateQuestion3Variables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateQuestion3Variables): MutationRef<CreateQuestion3Data, CreateQuestion3Variables>;
+  operationName: string;
+}
+export const createQuestion3Ref: CreateQuestion3Ref;
+
+export function createQuestion3(vars: CreateQuestion3Variables): MutationPromise<CreateQuestion3Data, CreateQuestion3Variables>;
+export function createQuestion3(dc: DataConnect, vars: CreateQuestion3Variables): MutationPromise<CreateQuestion3Data, CreateQuestion3Variables>;
+
+interface CreateQuestion2Ref {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateQuestion2Variables): MutationRef<CreateQuestion2Data, CreateQuestion2Variables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateQuestion2Variables): MutationRef<CreateQuestion2Data, CreateQuestion2Variables>;
+  operationName: string;
+}
+export const createQuestion2Ref: CreateQuestion2Ref;
+
+export function createQuestion2(vars: CreateQuestion2Variables): MutationPromise<CreateQuestion2Data, CreateQuestion2Variables>;
+export function createQuestion2(dc: DataConnect, vars: CreateQuestion2Variables): MutationPromise<CreateQuestion2Data, CreateQuestion2Variables>;
+
 interface UpdateQuestionRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: UpdateQuestionVariables): MutationRef<UpdateQuestionData, UpdateQuestionVariables>;
@@ -862,6 +948,30 @@ export const replaceAnswerOptionsRef: ReplaceAnswerOptionsRef;
 
 export function replaceAnswerOptions(vars: ReplaceAnswerOptionsVariables): MutationPromise<ReplaceAnswerOptionsData, ReplaceAnswerOptionsVariables>;
 export function replaceAnswerOptions(dc: DataConnect, vars: ReplaceAnswerOptionsVariables): MutationPromise<ReplaceAnswerOptionsData, ReplaceAnswerOptionsVariables>;
+
+interface ReplaceAnswerOptions3Ref {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: ReplaceAnswerOptions3Variables): MutationRef<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: ReplaceAnswerOptions3Variables): MutationRef<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+  operationName: string;
+}
+export const replaceAnswerOptions3Ref: ReplaceAnswerOptions3Ref;
+
+export function replaceAnswerOptions3(vars: ReplaceAnswerOptions3Variables): MutationPromise<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+export function replaceAnswerOptions3(dc: DataConnect, vars: ReplaceAnswerOptions3Variables): MutationPromise<ReplaceAnswerOptions3Data, ReplaceAnswerOptions3Variables>;
+
+interface ReplaceAnswerOptions2Ref {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: ReplaceAnswerOptions2Variables): MutationRef<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: ReplaceAnswerOptions2Variables): MutationRef<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+  operationName: string;
+}
+export const replaceAnswerOptions2Ref: ReplaceAnswerOptions2Ref;
+
+export function replaceAnswerOptions2(vars: ReplaceAnswerOptions2Variables): MutationPromise<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
+export function replaceAnswerOptions2(dc: DataConnect, vars: ReplaceAnswerOptions2Variables): MutationPromise<ReplaceAnswerOptions2Data, ReplaceAnswerOptions2Variables>;
 
 interface ListExamCategoriesRef {
   /* Allow users to create refs without passing in DataConnect */
