@@ -518,7 +518,7 @@ export interface GetExamForAttemptData {
     id: UUIDString;
     title: string;
     durationMinutes: number;
-    questions: ({
+    questionsForAttempt: ({
       id: UUIDString;
       statement: string;
       difficulty: QuestionDifficulty;
@@ -615,7 +615,7 @@ export interface GetAttemptReviewData {
     exam: {
       id: UUIDString;
       title: string;
-      questions: ({
+      questionsForReview: ({
         id: UUIDString;
         statement: string;
         explanation?: string | null;

@@ -43,7 +43,7 @@ export class DataConnectAttemptRepository implements AttemptRepository {
       id: data.exam.id,
       title: data.exam.title,
       durationMinutes: data.exam.durationMinutes,
-      questions: data.exam.questions,
+      questions: data.exam.questionsForAttempt,
     };
   }
 
@@ -168,7 +168,7 @@ export class DataConnectAttemptRepository implements AttemptRepository {
     return {
       id: a.id,
       examTitle: a.exam.title,
-      questions: a.exam.questions.map((q) => ({
+      questions: a.exam.questionsForReview.map((q) => ({
         id: q.id,
         statement: q.statement,
         explanation: q.explanation ?? null,

@@ -50,7 +50,7 @@ query GetExamForAttempt($examId: UUID!)
     id
     title
     durationMinutes
-    questions: questions_on_exam {
+    questionsForAttempt: questions_on_exam(limit: 200) {
       id
       statement
       difficulty
@@ -76,7 +76,7 @@ query GetAttemptReview($attemptId: UUID!) @auth(level: USER) {
     exam {
       id
       title
-      questions: questions_on_exam {
+      questionsForReview: questions_on_exam(limit: 200) {
         id
         statement
         explanation
@@ -215,7 +215,7 @@ query AdminListTopics($categoryId: UUID!) @auth(level: NO_ACCESS) {
 }
 
 query AdminListQuestions($examId: UUID!) @auth(level: NO_ACCESS) {
-  questions(where: { examId: { eq: $examId } }, orderBy: { createdAt: ASC }) {
+  questions(where: { examId: { eq: $examId } }, orderBy: { createdAt: ASC }, limit: 200) {
     id
     examId
     topicId
