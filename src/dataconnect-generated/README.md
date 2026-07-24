@@ -53,6 +53,8 @@ This README will guide you through the process of using the generated JavaScript
   - [*DeleteAnswerOptionsByQuestion*](#deleteansweroptionsbyquestion)
   - [*DeleteAttemptAnswersByQuestion*](#deleteattemptanswersbyquestion)
   - [*DeleteExamAttemptsByExam*](#deleteexamattemptsbyexam)
+  - [*DeleteAllAttemptAnswers*](#deleteallattemptanswers)
+  - [*DeleteAllExamAttempts*](#deleteallexamattempts)
   - [*DeleteQuestion*](#deletequestion)
   - [*ReplaceAnswerOptions*](#replaceansweroptions)
   - [*ReplaceAnswerOptions3*](#replaceansweroptions3)
@@ -4957,6 +4959,188 @@ const ref = deleteExamAttemptsByExamRef({ examId: ..., });
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
 const ref = deleteExamAttemptsByExamRef(dataConnect, deleteExamAttemptsByExamVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.examAttempt_deleteMany);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.examAttempt_deleteMany);
+});
+```
+
+## DeleteAllAttemptAnswers
+You can execute the `DeleteAllAttemptAnswers` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+deleteAllAttemptAnswers(): MutationPromise<DeleteAllAttemptAnswersData, undefined>;
+
+interface DeleteAllAttemptAnswersRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): MutationRef<DeleteAllAttemptAnswersData, undefined>;
+}
+export const deleteAllAttemptAnswersRef: DeleteAllAttemptAnswersRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+deleteAllAttemptAnswers(dc: DataConnect): MutationPromise<DeleteAllAttemptAnswersData, undefined>;
+
+interface DeleteAllAttemptAnswersRef {
+  ...
+  (dc: DataConnect): MutationRef<DeleteAllAttemptAnswersData, undefined>;
+}
+export const deleteAllAttemptAnswersRef: DeleteAllAttemptAnswersRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteAllAttemptAnswersRef:
+```typescript
+const name = deleteAllAttemptAnswersRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `DeleteAllAttemptAnswers` mutation has no variables.
+### Return Type
+Recall that executing the `DeleteAllAttemptAnswers` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteAllAttemptAnswersData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface DeleteAllAttemptAnswersData {
+  attemptAnswer_deleteMany: number;
+}
+```
+### Using `DeleteAllAttemptAnswers`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteAllAttemptAnswers } from '@dataconnect/generated';
+
+
+// Call the `deleteAllAttemptAnswers()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteAllAttemptAnswers();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteAllAttemptAnswers(dataConnect);
+
+console.log(data.attemptAnswer_deleteMany);
+
+// Or, you can use the `Promise` API.
+deleteAllAttemptAnswers().then((response) => {
+  const data = response.data;
+  console.log(data.attemptAnswer_deleteMany);
+});
+```
+
+### Using `DeleteAllAttemptAnswers`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteAllAttemptAnswersRef } from '@dataconnect/generated';
+
+
+// Call the `deleteAllAttemptAnswersRef()` function to get a reference to the mutation.
+const ref = deleteAllAttemptAnswersRef();
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteAllAttemptAnswersRef(dataConnect);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.attemptAnswer_deleteMany);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.attemptAnswer_deleteMany);
+});
+```
+
+## DeleteAllExamAttempts
+You can execute the `DeleteAllExamAttempts` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+deleteAllExamAttempts(): MutationPromise<DeleteAllExamAttemptsData, undefined>;
+
+interface DeleteAllExamAttemptsRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): MutationRef<DeleteAllExamAttemptsData, undefined>;
+}
+export const deleteAllExamAttemptsRef: DeleteAllExamAttemptsRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+deleteAllExamAttempts(dc: DataConnect): MutationPromise<DeleteAllExamAttemptsData, undefined>;
+
+interface DeleteAllExamAttemptsRef {
+  ...
+  (dc: DataConnect): MutationRef<DeleteAllExamAttemptsData, undefined>;
+}
+export const deleteAllExamAttemptsRef: DeleteAllExamAttemptsRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteAllExamAttemptsRef:
+```typescript
+const name = deleteAllExamAttemptsRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `DeleteAllExamAttempts` mutation has no variables.
+### Return Type
+Recall that executing the `DeleteAllExamAttempts` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteAllExamAttemptsData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface DeleteAllExamAttemptsData {
+  examAttempt_deleteMany: number;
+}
+```
+### Using `DeleteAllExamAttempts`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteAllExamAttempts } from '@dataconnect/generated';
+
+
+// Call the `deleteAllExamAttempts()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteAllExamAttempts();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteAllExamAttempts(dataConnect);
+
+console.log(data.examAttempt_deleteMany);
+
+// Or, you can use the `Promise` API.
+deleteAllExamAttempts().then((response) => {
+  const data = response.data;
+  console.log(data.examAttempt_deleteMany);
+});
+```
+
+### Using `DeleteAllExamAttempts`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteAllExamAttemptsRef } from '@dataconnect/generated';
+
+
+// Call the `deleteAllExamAttemptsRef()` function to get a reference to the mutation.
+const ref = deleteAllExamAttemptsRef();
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteAllExamAttemptsRef(dataConnect);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.

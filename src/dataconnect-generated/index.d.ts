@@ -238,6 +238,14 @@ export interface CreateTopicVariables {
   name: string;
 }
 
+export interface DeleteAllAttemptAnswersData {
+  attemptAnswer_deleteMany: number;
+}
+
+export interface DeleteAllExamAttemptsData {
+  examAttempt_deleteMany: number;
+}
+
 export interface DeleteAnswerOptionsByQuestionData {
   answerOption_deleteMany: number;
 }
@@ -964,6 +972,30 @@ export const deleteExamAttemptsByExamRef: DeleteExamAttemptsByExamRef;
 
 export function deleteExamAttemptsByExam(vars: DeleteExamAttemptsByExamVariables): MutationPromise<DeleteExamAttemptsByExamData, DeleteExamAttemptsByExamVariables>;
 export function deleteExamAttemptsByExam(dc: DataConnect, vars: DeleteExamAttemptsByExamVariables): MutationPromise<DeleteExamAttemptsByExamData, DeleteExamAttemptsByExamVariables>;
+
+interface DeleteAllAttemptAnswersRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): MutationRef<DeleteAllAttemptAnswersData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): MutationRef<DeleteAllAttemptAnswersData, undefined>;
+  operationName: string;
+}
+export const deleteAllAttemptAnswersRef: DeleteAllAttemptAnswersRef;
+
+export function deleteAllAttemptAnswers(): MutationPromise<DeleteAllAttemptAnswersData, undefined>;
+export function deleteAllAttemptAnswers(dc: DataConnect): MutationPromise<DeleteAllAttemptAnswersData, undefined>;
+
+interface DeleteAllExamAttemptsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): MutationRef<DeleteAllExamAttemptsData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): MutationRef<DeleteAllExamAttemptsData, undefined>;
+  operationName: string;
+}
+export const deleteAllExamAttemptsRef: DeleteAllExamAttemptsRef;
+
+export function deleteAllExamAttempts(): MutationPromise<DeleteAllExamAttemptsData, undefined>;
+export function deleteAllExamAttempts(dc: DataConnect): MutationPromise<DeleteAllExamAttemptsData, undefined>;
 
 interface DeleteQuestionRef {
   /* Allow users to create refs without passing in DataConnect */

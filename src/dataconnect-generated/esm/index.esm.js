@@ -327,6 +327,30 @@ export function deleteExamAttemptsByExam(dcOrVars, vars) {
   return executeMutation(deleteExamAttemptsByExamRef(dcInstance, inputVars));
 }
 
+export const deleteAllAttemptAnswersRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteAllAttemptAnswers');
+}
+deleteAllAttemptAnswersRef.operationName = 'DeleteAllAttemptAnswers';
+
+export function deleteAllAttemptAnswers(dc) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dc, undefined);
+  return executeMutation(deleteAllAttemptAnswersRef(dcInstance, inputVars));
+}
+
+export const deleteAllExamAttemptsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteAllExamAttempts');
+}
+deleteAllExamAttemptsRef.operationName = 'DeleteAllExamAttempts';
+
+export function deleteAllExamAttempts(dc) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dc, undefined);
+  return executeMutation(deleteAllExamAttemptsRef(dcInstance, inputVars));
+}
+
 export const deleteQuestionRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();

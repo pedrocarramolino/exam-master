@@ -260,6 +260,17 @@ mutation DeleteExamAttemptsByExam($examId: UUID!) @auth(level: NO_ACCESS) {
   examAttempt_deleteMany(where: { examId: { eq: $examId } })
 }
 
+# Resetea todo el historial de intentos (todos los usuarios, todos los exámenes),
+# sin tocar exámenes ni preguntas. Igual que arriba: hay que vaciar AttemptAnswer
+# antes de poder borrar ExamAttempt (FK NOT NULL).
+mutation DeleteAllAttemptAnswers @auth(level: NO_ACCESS) {
+  attemptAnswer_deleteMany(all: true)
+}
+
+mutation DeleteAllExamAttempts @auth(level: NO_ACCESS) {
+  examAttempt_deleteMany(all: true)
+}
+
 mutation DeleteQuestion($questionId: UUID!) @auth(level: NO_ACCESS) {
   question_delete(id: $questionId)
 }
