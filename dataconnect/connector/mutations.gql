@@ -249,6 +249,17 @@ mutation DeleteAnswerOptionsByQuestion($questionId: UUID!) @auth(level: NO_ACCES
   answerOption_deleteMany(where: { questionId: { eq: $questionId } })
 }
 
+# Herramientas de mantenimiento para borrar contenido de prueba que ya tiene
+# intentos de examen asociados (AttemptAnswer.question y ExamAttempt.exam son
+# NOT NULL, así que hay que vaciarlos antes de poder borrar preguntas/examen).
+mutation DeleteAttemptAnswersByQuestion($questionId: UUID!) @auth(level: NO_ACCESS) {
+  attemptAnswer_deleteMany(where: { questionId: { eq: $questionId } })
+}
+
+mutation DeleteExamAttemptsByExam($examId: UUID!) @auth(level: NO_ACCESS) {
+  examAttempt_deleteMany(where: { examId: { eq: $examId } })
+}
+
 mutation DeleteQuestion($questionId: UUID!) @auth(level: NO_ACCESS) {
   question_delete(id: $questionId)
 }

@@ -246,6 +246,22 @@ export interface DeleteAnswerOptionsByQuestionVariables {
   questionId: UUIDString;
 }
 
+export interface DeleteAttemptAnswersByQuestionData {
+  attemptAnswer_deleteMany: number;
+}
+
+export interface DeleteAttemptAnswersByQuestionVariables {
+  questionId: UUIDString;
+}
+
+export interface DeleteExamAttemptsByExamData {
+  examAttempt_deleteMany: number;
+}
+
+export interface DeleteExamAttemptsByExamVariables {
+  examId: UUIDString;
+}
+
 export interface DeleteExamCategoryData {
   examCategory_delete?: ExamCategory_Key | null;
 }
@@ -924,6 +940,30 @@ export const deleteAnswerOptionsByQuestionRef: DeleteAnswerOptionsByQuestionRef;
 
 export function deleteAnswerOptionsByQuestion(vars: DeleteAnswerOptionsByQuestionVariables): MutationPromise<DeleteAnswerOptionsByQuestionData, DeleteAnswerOptionsByQuestionVariables>;
 export function deleteAnswerOptionsByQuestion(dc: DataConnect, vars: DeleteAnswerOptionsByQuestionVariables): MutationPromise<DeleteAnswerOptionsByQuestionData, DeleteAnswerOptionsByQuestionVariables>;
+
+interface DeleteAttemptAnswersByQuestionRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteAttemptAnswersByQuestionVariables): MutationRef<DeleteAttemptAnswersByQuestionData, DeleteAttemptAnswersByQuestionVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteAttemptAnswersByQuestionVariables): MutationRef<DeleteAttemptAnswersByQuestionData, DeleteAttemptAnswersByQuestionVariables>;
+  operationName: string;
+}
+export const deleteAttemptAnswersByQuestionRef: DeleteAttemptAnswersByQuestionRef;
+
+export function deleteAttemptAnswersByQuestion(vars: DeleteAttemptAnswersByQuestionVariables): MutationPromise<DeleteAttemptAnswersByQuestionData, DeleteAttemptAnswersByQuestionVariables>;
+export function deleteAttemptAnswersByQuestion(dc: DataConnect, vars: DeleteAttemptAnswersByQuestionVariables): MutationPromise<DeleteAttemptAnswersByQuestionData, DeleteAttemptAnswersByQuestionVariables>;
+
+interface DeleteExamAttemptsByExamRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteExamAttemptsByExamVariables): MutationRef<DeleteExamAttemptsByExamData, DeleteExamAttemptsByExamVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteExamAttemptsByExamVariables): MutationRef<DeleteExamAttemptsByExamData, DeleteExamAttemptsByExamVariables>;
+  operationName: string;
+}
+export const deleteExamAttemptsByExamRef: DeleteExamAttemptsByExamRef;
+
+export function deleteExamAttemptsByExam(vars: DeleteExamAttemptsByExamVariables): MutationPromise<DeleteExamAttemptsByExamData, DeleteExamAttemptsByExamVariables>;
+export function deleteExamAttemptsByExam(dc: DataConnect, vars: DeleteExamAttemptsByExamVariables): MutationPromise<DeleteExamAttemptsByExamData, DeleteExamAttemptsByExamVariables>;
 
 interface DeleteQuestionRef {
   /* Allow users to create refs without passing in DataConnect */

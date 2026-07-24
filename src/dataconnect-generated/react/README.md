@@ -58,6 +58,8 @@ You can also follow the instructions from the [Data Connect documentation](https
   - [*CreateQuestion2*](#createquestion2)
   - [*UpdateQuestion*](#updatequestion)
   - [*DeleteAnswerOptionsByQuestion*](#deleteansweroptionsbyquestion)
+  - [*DeleteAttemptAnswersByQuestion*](#deleteattemptanswersbyquestion)
+  - [*DeleteExamAttemptsByExam*](#deleteexamattemptsbyexam)
   - [*DeleteQuestion*](#deletequestion)
   - [*ReplaceAnswerOptions*](#replaceansweroptions)
   - [*ReplaceAnswerOptions3*](#replaceansweroptions3)
@@ -3959,6 +3961,194 @@ export default function DeleteAnswerOptionsByQuestionComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.answerOption_deleteMany);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## DeleteAttemptAnswersByQuestion
+You can execute the `DeleteAttemptAnswersByQuestion` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useDeleteAttemptAnswersByQuestion(options?: useDataConnectMutationOptions<DeleteAttemptAnswersByQuestionData, FirebaseError, DeleteAttemptAnswersByQuestionVariables>): UseDataConnectMutationResult<DeleteAttemptAnswersByQuestionData, DeleteAttemptAnswersByQuestionVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useDeleteAttemptAnswersByQuestion(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteAttemptAnswersByQuestionData, FirebaseError, DeleteAttemptAnswersByQuestionVariables>): UseDataConnectMutationResult<DeleteAttemptAnswersByQuestionData, DeleteAttemptAnswersByQuestionVariables>;
+```
+
+### Variables
+The `DeleteAttemptAnswersByQuestion` Mutation requires an argument of type `DeleteAttemptAnswersByQuestionVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface DeleteAttemptAnswersByQuestionVariables {
+  questionId: UUIDString;
+}
+```
+### Return Type
+Recall that calling the `DeleteAttemptAnswersByQuestion` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `DeleteAttemptAnswersByQuestion` Mutation is of type `DeleteAttemptAnswersByQuestionData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface DeleteAttemptAnswersByQuestionData {
+  attemptAnswer_deleteMany: number;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `DeleteAttemptAnswersByQuestion`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, DeleteAttemptAnswersByQuestionVariables } from '@dataconnect/generated';
+import { useDeleteAttemptAnswersByQuestion } from '@dataconnect/generated/react'
+
+export default function DeleteAttemptAnswersByQuestionComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useDeleteAttemptAnswersByQuestion();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useDeleteAttemptAnswersByQuestion(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteAttemptAnswersByQuestion(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteAttemptAnswersByQuestion(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useDeleteAttemptAnswersByQuestion` Mutation requires an argument of type `DeleteAttemptAnswersByQuestionVariables`:
+  const deleteAttemptAnswersByQuestionVars: DeleteAttemptAnswersByQuestionVariables = {
+    questionId: ..., 
+  };
+  mutation.mutate(deleteAttemptAnswersByQuestionVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ questionId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(deleteAttemptAnswersByQuestionVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.attemptAnswer_deleteMany);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## DeleteExamAttemptsByExam
+You can execute the `DeleteExamAttemptsByExam` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useDeleteExamAttemptsByExam(options?: useDataConnectMutationOptions<DeleteExamAttemptsByExamData, FirebaseError, DeleteExamAttemptsByExamVariables>): UseDataConnectMutationResult<DeleteExamAttemptsByExamData, DeleteExamAttemptsByExamVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useDeleteExamAttemptsByExam(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteExamAttemptsByExamData, FirebaseError, DeleteExamAttemptsByExamVariables>): UseDataConnectMutationResult<DeleteExamAttemptsByExamData, DeleteExamAttemptsByExamVariables>;
+```
+
+### Variables
+The `DeleteExamAttemptsByExam` Mutation requires an argument of type `DeleteExamAttemptsByExamVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface DeleteExamAttemptsByExamVariables {
+  examId: UUIDString;
+}
+```
+### Return Type
+Recall that calling the `DeleteExamAttemptsByExam` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `DeleteExamAttemptsByExam` Mutation is of type `DeleteExamAttemptsByExamData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface DeleteExamAttemptsByExamData {
+  examAttempt_deleteMany: number;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `DeleteExamAttemptsByExam`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, DeleteExamAttemptsByExamVariables } from '@dataconnect/generated';
+import { useDeleteExamAttemptsByExam } from '@dataconnect/generated/react'
+
+export default function DeleteExamAttemptsByExamComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useDeleteExamAttemptsByExam();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useDeleteExamAttemptsByExam(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteExamAttemptsByExam(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteExamAttemptsByExam(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useDeleteExamAttemptsByExam` Mutation requires an argument of type `DeleteExamAttemptsByExamVariables`:
+  const deleteExamAttemptsByExamVars: DeleteExamAttemptsByExamVariables = {
+    examId: ..., 
+  };
+  mutation.mutate(deleteExamAttemptsByExamVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ examId: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(deleteExamAttemptsByExamVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.examAttempt_deleteMany);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }
